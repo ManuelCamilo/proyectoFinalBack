@@ -32,29 +32,24 @@ const productController = {
     },
 
     pcUpdateProduct(request,response) {
-        const updatedProduct = productManager.updateProduct(
-            request.params.pid,
-            request.body.title,
-            request.body.description,
-            request.body.code,
-            request.body.price,
-            request.body.status,
-            request.body.stock,
-            request.body.category,
-            request.body.thumbnails,
-        );   
+        try {
+            const updatedProduct = productManager.updateProduct(request.params.pid,request.body)
+
         if (!updatedProduct) {
-            return response.status(404).json({ message: 'Producto no encontrado'})
+            return response.status(404).json({ message: 'Producto no encontrado' });
         }
-        response.json(updatedProduct)
+        response.status(200).json({ message: 'Producto actualizado con éxito'})
+        } catch (error) {
+            response.status(400).json({message: error.message})
+        }
     },
 
     pcDeleteProduct(request,response) {
         const deletedProduct = productManager.deleteProduct(request.params.pid);
         if (!deletedProduct) {
-            return response.status(404).json( { message: 'Producto no encontrado'} )
+            return response.status(404).json ({ message: 'Producto no encontrado'})
         }
-        response.json(deletedProduct);
+        return response.status(200).json ({message: 'Producto eliminado del catalogo'})
     }
     
 }

@@ -36,52 +36,32 @@ class ProductManager{
     } 
 
     updateProduct = (id, updatedFields) => {
-    const products = this.getProducts()
-    const index = products.findIndex((product) => product.id === id)
-    if (index !== -1) {
-        products [index] = {...products[index], ...updatedFields}
-        fs.writeFileSync(this.path, JSON.stringify(products))
-        return products [index]
+        const products = this.getProducts()
+        const productIndex = products.findIndex((product) => product.id == id)
+
+        if (productIndex === -1) {
+            return null
         }
-        return null
-    }
+        const productoUp = products[productIndex];
+        if ('id' in updatedFields && updatedFields.id !== productoUp.id) {
+            throw new Error("No se puede actualizar el campo 'id'");
+        }
+        products[productIndex] = { ...products[productIndex], ...updatedFields };
+        fs.writeFileSync(this.path, JSON.stringify(products));
+        return products[productIndex];
+    }   
+    
 
     deleteProduct = (id) => {
         const products = this.getProducts()
-        const index = products.findIndex((product) => product.id === id)
+        const index = products.findIndex((product) => product.id == id)
         if (index !== -1) {
-          const deletedProduct = products.splice(index, 1)
-          fs.writeFileSync(this.path, JSON.stringify(products))
+          const deletedProduct = products.splice(index, 1);
+          fs.writeFileSync(this.path, JSON.stringify(products));
           return deletedProduct[0]
         }
-        return null
-      }
+        return false
+    }
 }
-
-// const primerProducto = {
-//     title: 'Osito teddy ',
-//     description:'oso peluche teddy 3% algodón',
-//     price: 8400,
-//     thumbnail: 'none',
-//     code: 01,
-//     stock: 10,
-// }
-// const segundoProducto = {
-//     title: 'Espada samuray', 
-//     description:'Espada antigua real con firma',
-//     price: 130000,
-//     thumbnail: 'none',
-//     code: 02,
-//     stock: 4,
-// }
-// const tercerProducto = {
-//     title: 'Desodorante AXE',
-//     description:'Desodorante axe fragancia chocolate irresistible',
-//     price: 700,
-//     thumbnail: 'none',
-//     code: 03,
-//     stock: 200,
-// }
-
 
 export default ProductManager;
