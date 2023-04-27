@@ -34,17 +34,17 @@ class CartManager {
 
     addProductToCart(cid, pid, quantity) {
         const carts = this.getCarts();
-        const cartIndex = carts.findIndex((cart) => cart.id == cid);
+        const cartIndex = carts.findIndex((cart) => parseInt(cart.id) === parseInt(cid));
         if (cartIndex === -1) {
         return { error: true, message: 'El carrito no existe' };
         }
 
         const cart = carts [cartIndex];
-        const productIndex = cart.products.findIndex((product) => product.id === pid);
+        const productIndex = cart.products.findIndex((product) => parseInt(product.product) === parseInt(pid));
         if (productIndex === -1) {
-          cart.products.push({ product: pid, quantity: 1});
+            cart.products.push({ product: pid, quantity: 1});
         } else {
-          cart.products[productIndex].quantity++;
+            cart.products[productIndex].quantity += 1;
         }
           
         fs.writeFileSync(this.path, JSON.stringify(carts));
