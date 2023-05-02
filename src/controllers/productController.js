@@ -2,12 +2,12 @@
 import ProductManager from '../helpers/ProductManager.js';
 
 
-const productManager = new ProductManager('./src/data/productos.json')
+const productManager = new ProductManager('./data/productos.json')
 
 const productController = { 
     pcGetAll(request, response) {
         const products = productManager.getProducts();
-        response.status(200).json(products);
+        response.render('index', { products });
     },
 
     pcGetByID(request,response) {

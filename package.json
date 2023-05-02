@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "express": "^4.18.2",
+    "express-handlebars": "^7.0.7",
     "nodemon": "^2.0.22"
   },
   "name": "desafio03",
@@ -13,6 +14,5 @@
   "keywords": [],
   "author": "Manuel Camilo Caro",
   "license": "ISC",
-  "description": "Entregable número 3 - Programación Backend.",
-  "devDependencies": {}
+  "description": "Entregable número 3 - Programación Backend."
 }
