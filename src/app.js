@@ -2,22 +2,30 @@ import express from 'express';
 import routerProducts from './routers/router.products.js';
 import routerCart from './routers/router.cart.js';
 import __dirname from './utils.js';
-import handlebars from 'express-handlebars'
+import handlebars from 'express-handlebars';
+import { Server } from 'socket.io';
+import routerViews from './routers/router.views.js'
 
-const server = express()
 
-server.use(express.json());
- 
+const app = express()
+const server = app.listen(8080, () => console.log('Server Up'));
+const io = new Server(server) 
+
+app.use(express.json());
+
+app.use(express.urlencoded({ extended: true }));
 // static
-server.use(express.static(__dirname+'/public'))
-
+app.use(express.static(__dirname+'/public'))
+ 
 //motor de plantillas - din
-server.engine('handlebars', handlebars.engine())
-server.set('views', __dirname+'/views')
-server.set('view engine', 'handlebars') 
+app.engine('handlebars', handlebars.engine())
+app.set('views', __dirname+'/views')
+app.set('view engine', 'handlebars') 
 
-server.use('/api/products', routerProducts);
-server.use('/api/carts', routerCart);
+app.use('/api/products', routerProducts);
+app.use('/api/carts', routerCart);
+app.use('/realtimeproducts', routerViews);
 
-server.listen(8080, () => console.log('Server Up'));
-
+io.on('connection', () => {
+    console.log('cliente socket conectado')
+})
