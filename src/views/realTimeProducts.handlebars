@@ -1,54 +1,31 @@
-<h1>Productos</h1>
-
-<div id="boxProducts">
-  <ul>
-  {{#each products}}
-  <li>{{this.title}} - {{this.price}}</li>
-  {{/each}}
-</ul>
+<div id="formContainer">
+  <h2>Cargar un producto</h2>
+  <div>Titulo:</div>
+  <div><input type="text" id="title" /></div>
+  <div>Description:</div>
+  <div><input type="text" id="description" /></div>
+  <div>Precio:</div>
+  <div><input type="text" id="price" /></div>
+  <div>Imagen:</div>
+  <div><input type="text" id="thumbnail" /></div>
+  <div>Codigo:</div>
+  <div><input type="text" id="code" /></div>
+  <div>Stock:</div>
+  <div><input type="text" id="stock" /></div>
+  <button id="btnCrear">Crear</button>
+</div>
+<div>
+  <h2>Eliminar producto</h2>
+  <div>Id:</div>
+  <div><input type="text" id="id"></div>
+  <button id="btnDelete">Eliminar</button>
+</div>
+<div id="productsContainer">
+  <h2>Listado de productos</h2>
+  
 </div>
 
-<form method="POST">
-  <h2>Add Product</h2>
-  <div>
-    <label>Title:</label>
-    <input type="text" id="title" name="title">
-  </div>
-  <div>
-    <label>Description:</label>
-    <input type="text" id="description" name="description">
-  </div>
-    <div>
-    <label>Thumbnail:</label>
-    <input type="text" id="thumbnail" name="thumbnail">
-  </div>
-    <div>
-    <label>Price:</label>
-    <input type="number" id="price" name="price">
-  </div>
-    <div>
-    <label>Stock:</label>
-    <input type="number" id="stock" name="stock">
-  </div>
-    <div>
-    <label>Code:</label>
-    <input type="number" id="code" name="code">
-  </div>
-  <button type="submit">Add Product</button>
-</form>
-
-
-
-<form id="">
-  <h2>Delete Product</h2>
-  <div>
-    <label for="product-id">Product ID:</label>
-    <input type="text" id="" name="product-id">
-  </div>
-  <button type="submit">Delete Product</button>
-</form>
-
-
+<div id="historyProducts"></div>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="js/clientIndex.js"></script>
+<script src="/js/clientIndex.js"></script>

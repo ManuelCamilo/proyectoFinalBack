@@ -8,26 +8,39 @@ class ProductManager{
             fs.writeFileSync(path, '[]')
         }
     }
+    
+    addProduct = async (product) => {
+          const products = await this.getProducts();
+          const id = this.generateID();
+          const productoNuevo = { ...product, id };
+          products.push(productoNuevo);
+          await fs.promises.writeFile(this.path, JSON.stringify(products));
+          return productoNuevo;
+    };
 
     generateID = () => {
-        const products = this.getProducts()
-        if (products.length === 0) return 1
-        return products[products.length-1].id +1
-    }
-    
-    addProduct = (product) => {
-        const products = this.getProducts()
-        const id = this.generateID()
-        const productoNuevo = {...product, id}
-        products.push(productoNuevo)
-        fs.writeFileSync(this.path, JSON.stringify(products))
-        return productoNuevo
-    }
+        if (!fs.existsSync(this.path)) return 1;
+        const products = JSON.parse(fs.readFileSync(this.path, "utf-8"));
+        let id = products[products.length - 1].id + 1;
+        return id;
+    };
 
-    getProducts = () => {
-        const carrito = fs.readFileSync(this.path, 'utf-8')
-        return JSON.parse(carrito)    
-    }
+    getProducts = async () => {
+        if (!fs.existsSync (this.path)) {
+            return [];
+        } else {
+          const data = await fs.promises.readFile(this.path, 'utf-8');
+          if (data) {
+            const products = JSON.parse(data);
+            return await products;
+        }
+        }
+    };
+
+    getProductos = async () => {
+        const products = await this.getProducts();
+        return await products;
+      };
 
     getProductById = (id) => {
         const products = this.getProducts()
@@ -52,16 +65,20 @@ class ProductManager{
     }   
     
 
-    deleteProduct = (id) => {
-        const products = this.getProducts()
-        const index = products.findIndex((product) => product.id == id)
-        if (index !== -1) {
-          const deletedProduct = products.splice(index, 1);
-          fs.writeFileSync(this.path, JSON.stringify(products));
-          return deletedProduct[0]
+    deleteProduct = async (id) => {
+        try {
+          const products = await this.getProducts();
+          const index = products.findIndex((product) => product.id == id);
+          if (index !== -1) {
+            const deletedProduct = products.splice(index, 1);
+            await fs.promises.writeFile(this.path, JSON.stringify(products));
+            return deletedProduct[0];
+          }
+          return false;
+        } catch (error) {
+          throw new Error('Error deleting product');
         }
-        return false
-    }
+    };
 }
 
 export default ProductManager;
