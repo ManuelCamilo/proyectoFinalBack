@@ -1,7 +1,7 @@
-import ProductManager from "../helpers/mongoDB/productManager";
+import ProductManager from "../helpers/mongoDB/productManager.js";
 
 
-const productManager = new ProductManager('./data/productos.json')
+const productManager = new ProductManager()
 
 const productController = { 
     pcGetAll(request, response) {
