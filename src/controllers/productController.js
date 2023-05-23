@@ -1,5 +1,4 @@
-
-import ProductManager from '../helpers/ProductManager.js';
+import ProductManager from "../helpers/mongoDB/productManager";
 
 
 const productManager = new ProductManager('./data/productos.json')
@@ -7,7 +6,6 @@ const productManager = new ProductManager('./data/productos.json')
 const productController = { 
     pcGetAll(request, response) {
         const products = productManager.getProducts();
-        // response.status(200).json(products);
         response.render('index', { products });
     },
 
