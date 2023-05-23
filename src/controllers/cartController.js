@@ -1,8 +1,7 @@
+import CartManager from "../helpers/mongoDB/cartManager.js";
 
-import CartManager from '../helpers/CartManager.js';
 
-
-const cartManager = new CartManager('./src/data/cart.json');
+const cartManager = new CartManager();
 
 const cartController = {
     createCart (request, response) {
