@@ -12,7 +12,7 @@ class ProductManager {
     }
     async getProducts() {
         try{
-            const products = await productModel.find();
+            const products = await productModel.find().lean().exec();
             return products;
         } catch (error) {
             console.error("Error al traer los productos");
@@ -21,7 +21,7 @@ class ProductManager {
     }
     async getProductsById(id) {
         try{
-            const product = await productModel.findById(id);
+            const product = await productModel.findById(id).lean().exec();;
             return product;
         } catch (error) {
             console.error("Error al traer el producto");

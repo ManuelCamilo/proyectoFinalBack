@@ -31,45 +31,45 @@ app.use('/api/carts', routerCart);
 // app.use('/realtimeproducts', routerViews);
 
 
-io.on("connection", (socket) => {
-    console.log("Nuevo cliente conectado!");
+// io.on("connection", (socket) => {
+//     console.log("Nuevo cliente conectado!");
 
-    const productManager = new ProductManager()
+//     const productManager = new ProductManager()
   
-    productManager.getProducts().then((products) => {
-      if (products) {
-        io.emit("resp-new-product", products);
-      }
-    });
+//     productManager.getProducts().then((products) => {
+//       if (products) {
+//         io.emit("resp-new-product", products);
+//       }
+//     });
   
-    socket.on("new-product", (products) => {
-      productManager.addProduct(products).then((products) => {
-        if (products) {
-          productManager.getProductos().then((products) => {
-            if (products) {
-              io.emit("resp-new-product", products);
-            }
-          });
-        } else {
-          socket.emit("resp-new-product", "Error al agregar el producto");
-        }
-      });
-    });
+//     socket.on("new-product", (products) => {
+//       productManager.addProduct(products).then((products) => {
+//         if (products) {
+//           productManager.getProductos().then((products) => {
+//             if (products) {
+//               io.emit("resp-new-product", products);
+//             }
+//           });
+//         } else {
+//           socket.emit("resp-new-product", "Error al agregar el producto");
+//         }
+//       });
+//     });
   
-    socket.on('delete-product', (id) => {
-      productManager.deleteProduct(parseInt(id)).then((products) => {
-        if (products) {
-          productManager.getProductos().then((products) => {
-            if (products) {
-              io.emit("resp-delete-product", products);
-            }
-          });
-        } else {
-          socket.emit("resp-delete-product", "Error al eliminar el producto");
-        }
-      });
-    });
-});
+//     socket.on('delete-product', (id) => {
+//       productManager.deleteProduct(parseInt(id)).then((products) => {
+//         if (products) {
+//           productManager.getProductos().then((products) => {
+//             if (products) {
+//               io.emit("resp-delete-product", products);
+//             }
+//           });
+//         } else {
+//           socket.emit("resp-delete-product", "Error al eliminar el producto");
+//         }
+//       });
+//     });
+// });
 
 
 mongoose.set('strictQuery', false)

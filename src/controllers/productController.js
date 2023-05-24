@@ -1,4 +1,5 @@
 import ProductManager from "../helpers/mongoDB/productManager.js";
+import mongoose from "mongoose";
 
 
 const productManager = new ProductManager()
@@ -15,16 +16,12 @@ const productController = {
 
     async pcGetByID(request,response) {
         try{
-            const pid = parseInt(request.params.pid);
-            if (isNaN(pid)){
-                response.status(400).json({ message: `El ID '${request.params.pid}' no es un número válido`});
-                return
-            }
-            const product = await productManager.getProductById(pid);
+            const id = mongoose.Types.ObjectId(request.params.pid);
+            const product = await productManager.getProductById(id);
             if (product) {
                 response.status(200).json(product);
             } else {
-                response.status(404).json({ message: `El producto con el id ${pid} no se encuentra`});
+                response.status(404).json({ message: `El producto con el id ${id} no se encuentra`});
             }
         } catch (error) {
             response.status(500).json({ message: 'Error al obtener el producto'});
