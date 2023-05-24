@@ -34,7 +34,7 @@ app.use('/api/carts', routerCart);
 io.on("connection", (socket) => {
     console.log("Nuevo cliente conectado!");
 
-    const productManager = new ProductManager('./data/productos.json')
+    const productManager = new ProductManager()
   
     productManager.getProducts().then((products) => {
       if (products) {

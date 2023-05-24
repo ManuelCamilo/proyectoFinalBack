@@ -8,7 +8,7 @@ const productSchema = mongoose.Schema({
     price: { type: Number, required: true},
     thumbnail: { type: String, required: true},
     code: { type: String, required: true},
-    stock: { type: String, required: true},
+    stock: { type: Number, required: true}
 });
 
 const productModel = mongoose.model(productCollection, productSchema);

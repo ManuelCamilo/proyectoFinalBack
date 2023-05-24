@@ -1,8 +1,8 @@
 import express from "express";
-import ProductManager from "../helpers/ProductManager.js";
+import ProductManager from "../helpers/mongoDB/productManager.js";
 
 const router = express.Router()
-const productManager = new ProductManager('./data/productos.json')
+const productManager = new ProductManager()
 
 router.get("/", (req, res) => {
   productManager.getProducts().then((products) => {
