@@ -16,7 +16,7 @@ const ProductController = {
     async pcGetByID(request,response) {
         try{
             const { pid } = request.params;
-            const product = await productManager.getProductById(pid);
+            const product = await productManager.getProductsById(pid);
             if (product) {
                 response.status(200).json(product);
             } else {
@@ -51,8 +51,10 @@ const ProductController = {
     async pcDeleteProduct(request,response) {
         try{
             const deletedProduct = await productManager.deleteProduct(request.params.pid);
-            if (!deletedProduct) {
-            return response.status(404).json ({ message: 'Producto no encontrado'})
+            if (deletedProduct) {
+                response.status(200).json({ message: 'Producto eliminado del catálogo' });
+            } else {
+                response.status(404).json({ message: 'Producto no encontrado' });
             }
         } catch (error) {
             return response.status(200).json ({message: 'Producto eliminado del catalogo'})

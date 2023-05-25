@@ -5,7 +5,6 @@ import routerViews from './routers/router.views.js'
 import __dirname from './utils.js';
 import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
-import ProductManager from './helpers/mongoDB/productManager.js';
 import mongoose from 'mongoose';
 
 const uri = 'mongodb+srv://manuelcamilo16:C0d3r@coder.7izbpeb.mongodb.net/ecommerce'

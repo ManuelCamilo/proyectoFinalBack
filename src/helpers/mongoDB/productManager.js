@@ -1,15 +1,6 @@
 import productModel from "../../model/products.model.js";
 
 class ProductManager {
-    async addProduct(product) {
-        try{
-            const newProduct = await productModel.create(product);
-            return newProduct;
-        } catch (error) {
-            console.error("Error agregando el producto:");
-            throw error
-        }
-    }
     async getProducts() {
         try{
             const products = await productModel.find().lean().exec();
@@ -21,19 +12,28 @@ class ProductManager {
     }
     async getProductsById(id) {
         try {
-          const product = await productModel.findById(id);
-          return product;
+            const product = await productModel.findById(id);
+            return product;
         } catch (error) {
-          console.error("Error al traer el producto");
-          throw error;
+            console.error("Error al traer el producto");
+            throw error;
         }
     }
-
-    async updateProductById(id, updatedFields) {
+    async addProduct(product) {
+        try{
+            const newProduct = await productModel.create(product);
+            return newProduct;
+        } catch (error) {
+            console.error("Error agregando el producto:");
+            throw error
+        }
+    }
+    
+    async updateProduct(id, updatedFields) {
         try{
             const product = await productModel.findByIdAndUpdate(
                 id,
-                updatedField,
+                updatedFields,
                 {new:true}
             );
             return product;
@@ -45,7 +45,12 @@ class ProductManager {
     async deleteProduct(id) {
         try {
             const deletedproduct = await productModel.findByIdAndDelete(id);
-            return deletedproduct;
+            if (deletedproduct) {
+                console.log('Producto eliminado', deletedproduct);
+                return true;
+            } else {
+                return false
+            }
         } catch(error) {
             console.error("Error intentando eliminar el producto");
             throw error;
