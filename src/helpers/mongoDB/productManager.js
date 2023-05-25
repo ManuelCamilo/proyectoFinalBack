@@ -20,14 +20,15 @@ class ProductManager {
         }
     }
     async getProductsById(id) {
-        try{
-            const product = await productModel.findById(id).lean().exec();;
-            return product;
+        try {
+          const product = await productModel.findById(id);
+          return product;
         } catch (error) {
-            console.error("Error al traer el producto");
-            throw error
+          console.error("Error al traer el producto");
+          throw error;
         }
     }
+
     async updateProductById(id, updatedFields) {
         try{
             const product = await productModel.findByIdAndUpdate(
