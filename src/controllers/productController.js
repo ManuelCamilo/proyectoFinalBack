@@ -1,4 +1,4 @@
-import ProductManager from "../helpers/mongoDB/productManager.js";
+import ProductManager from "../helpers/productManager.js";
 
 
 const productManager = new ProductManager()
