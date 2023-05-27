@@ -40,7 +40,7 @@ class CartManager {
           return { error: true, message: 'El carrito no existe' };
         }
     
-        const productIndex = cart.products.findIndex((item) => item.product.toString() === productId);
+        const productIndex = await cart.products.findIndex((item) => item.product.toString() === productId);
         if (productIndex === -1) {
           cart.products.push({ product: productId, quantity: 1 });
         } else {
@@ -53,7 +53,9 @@ class CartManager {
         console.error("Error adding product to cart:", error);
         throw error;
       }
-    }
+    } 
+    
+    
   }
   
   export default CartManager;
