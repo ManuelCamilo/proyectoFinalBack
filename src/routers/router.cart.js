@@ -8,5 +8,9 @@ router.post('/', cartController.createCart);
 router.get('/:cid', cartController.getCart);
 router.post('/:cid/products/:pid', cartController.addProductToCart);
 
+router.delete('/:cid/products/:pid')
+router.put('/:cid',)
+router.put('/:cid/products/:pid') 
+router.delete('/:cid')
 
 export default router;

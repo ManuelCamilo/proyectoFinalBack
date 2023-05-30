@@ -6,7 +6,7 @@ const cartController = {
     async createCart(request, response) {
       try {
         const newCart = await cartManager.createCart();
-        response.status(201).json({ message: 'Carrito creado con éxito!' })
+        response.status(201).json({ message: 'Carrito creado con éxito!', cart: newCart })
       } catch (error) {
         console.error("Error creating cart:", error);
         response.status(500).json({ error: "Internal Server Error" });
@@ -30,7 +30,6 @@ const cartController = {
     
     async addProductToCart(request, response) {
       const { cid, pid } = request.params;
-    
       try {
         const cart = await cartManager.addProductToCart(cid, pid);
         if (cart.error) {

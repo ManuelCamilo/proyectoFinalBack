@@ -6,21 +6,18 @@ const productManager = new ProductManager()
 const ProductController = { 
     async pcGetAll(request, response) {
         try {
-            const { limit = 10, page = 1, sort} = request.query;
-
-            const options = {
-                limit: parseInt(limit),
-                page: parseInt(page),
-                sort: sort === "desc" ? -1 : 1,
-                lean: true
-            };
-
-            const result = await productManager.getProducts(options);
-
-            // prevLink: prevPage ? `/api/products?page=${prevPage}` : null
-            // nextLink: nextPage ? `/api/products?page=${nextPage}` : null
-
-            response.status(200).json(result)
+          const { limit = 10, page = 1, sort, query, filter } = request.query;
+    
+          const options = {
+            limit: limit,
+            page: page,
+            sort: sort,
+            query: query,
+            filter: filter,
+          };
+    
+          const result = await productManager.getProducts(options);
+            response.status(200).json(result);
             // response.render('index', { products });
         } catch (error) {
             response.status(500).json({ message: 'Error al obtener los productos' });
