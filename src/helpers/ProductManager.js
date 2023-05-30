@@ -1,24 +1,28 @@
 import productModel from "../model/products.model.js";
 
 class ProductManager {
-    async getProducts() {
-        try{
-            const products = await productModel.find().lean().exec();
-            return products;
-        } catch (error) {
-            console.error("Error al traer los productos");
-            throw error
-        }
-    }
-    async getProductsById(id) {
+    async getProducts(options) {
+        const { limit = 10, page = 1, sort} = options;
+    
+        const paginationOptions = {
+          page: page,
+          limit: limit,
+          sort: sort ? { price: sort } : null,
+          lean: true
+        };
+    
+        // const filter = query ? { $text: { $search: query } } : {};
+    
         try {
-            const product = await productModel.findById(id);
-            return product;
+          const result = await productModel.paginate({}, paginationOptions);
+          return result;
+          
         } catch (error) {
-            console.error("Error al traer el producto");
-            throw error;
+          console.error("Error al obtener los productos:", error);
+          throw error;
         }
     }
+
     async addProduct(product) {
         try{
             const newProduct = await productModel.create(product);

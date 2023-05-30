@@ -15,7 +15,7 @@ class CartManager {
   
     async getCartById(id) {
       try {
-        const cart = await cartModel.findById(id);
+        const cart = await cartModel.findById(id)
         return cart;
       } catch (error) {
         console.error("Error getting cart by ID:", error);
@@ -54,7 +54,7 @@ class CartManager {
         throw error;
       }
     } 
-    
+
     
   }
   
