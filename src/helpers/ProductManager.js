@@ -7,19 +7,43 @@ class ProductManager {
         const paginationOptions = {
           page: page,
           limit: limit,
-          sort: sort ? { price: sort } : null,
-          lean: true
+          sort: sort ? { price: sort } : {},
         };
-    
-        // const filter = query ? { $text: { $search: query } } : {};
+
     
         try {
           const result = await productModel.paginate({}, paginationOptions);
-          return result;
+
+        const { docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } = result;
+
+        
+        const response = {
+            status: "success",
+            payload: docs,
+            totalPages: totalPages,
+            prevPage: prevPage,
+            nextPage: nextPage,
+            page: page,
+            hasPrevPage: hasPrevPage,
+            hasNextPage: hasNextPage,
+            prevLink: prevPage ? `/api/products?page=${prevPage}` : null,
+            nextLink: nextPage ? `/api/products?page=${nextPage}` : null
+          };
           
+          return response
         } catch (error) {
           console.error("Error al obtener los productos:", error);
           throw error;
+        }
+    }
+
+    async getProductsById(pid) {
+        try{
+            const foundProduct = await productModel.findById(pid);
+            return foundProduct;
+        } catch (error) {
+            console.error("Error al obtener el producto: ", error);
+            throw error;
         }
     }
 
@@ -37,8 +61,8 @@ class ProductManager {
         try{
             const product = await productModel.findByIdAndUpdate(
                 id,
-                updatedFields,
-                {new:true}
+                { $set: updatedFields },
+                { new:true }
             );
             return product;
         } catch (error) {
