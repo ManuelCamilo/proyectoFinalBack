@@ -66,7 +66,61 @@ class CartManager {
       }
     }
 
-    
-  }
+    async updateCart(cartId, updatedProducts) {
+      try {
+        const cart = await cartModel.findById(cartId);
+        if (!cart) {
+          return { message: 'El carrito no existe' };
+        }
+        cart.products = updatedProducts;
+
+        await cart.save();
+        return { message: "Carrito actualizado", cart };
+      } catch (error) {
+        console.error('Error updating cart:', error);
+        throw error;
+      }
+    }
+
+    async updateQuantity(cid, pid, quantity) {
+      try{
+        const cart = await cartModel.findById(cid);
+        if (!cart) {
+          return {message:"El carrito indicado no existe."}
+        } 
+
+        const product = cart.products.find(item => item.product && item.product.toString() === pid)
+        if (!product) {
+          return {message:"El producto no existe en el carrito."}
+        }
+
+        product.quantity = quantity;
+
+        await cart.save();
+        return {success: true, message:"cantidad actualizada"};
+      } catch (error) {
+        console.error ('Error actualziando la cantidad', error);
+        throw WebGLVertexArrayObject;
+      }
+    }
+
+    async emptyCart(cid) {
+      try {
+        const cart = await cartModel.findById(cid);
+        if (!cart) {
+          return {message:"El carrito indicado no existe"};
+        }
+
+        cart.products= [];
+
+        await cart.save();
+        return {success: true, message: "Carrito Vacio"};
+      } catch (error) {
+        console.error ('Error al vaciar el carrito:', error);
+        throw error;
+      }
+    }
+
+}
   
   export default CartManager;

@@ -3,7 +3,7 @@ import CartManager from "../helpers/cartManager.js";
 const cartManager = new CartManager();
 
 const cartController = {
-    async createCart(request, response) {
+    async pcCreateCart(request, response) {
       try {
         const newCart = await cartManager.createCart();
         response.status(201).json({ message: 'Carrito creado con éxito!', cart: newCart })
@@ -13,8 +13,8 @@ const cartController = {
       }
     },
 
-    async getCart (request, response) {
-        const {cid} = request.params;
+    async pcGetCart (request, response) {
+        const cid = request.params.cid;
         try{
           const cart = await cartManager.getCartById(cid);
           if (!cart) {
@@ -28,7 +28,7 @@ const cartController = {
 
     },
     
-    async addProductToCart(request, response) {
+    async pcAddProductToCart(request, response) {
       const { cid, pid } = request.params;
       try {
         const cart = await cartManager.addProductToCart(cid, pid);
@@ -54,8 +54,66 @@ const cartController = {
       } catch (error) {
         response.status(500)
       }
+    },
+
+    async pcUpdateCart(request, response) {
+      try {
+        const cid  = request.params.cid;
+        const products = request.body.products;
+  
+        const result = await cartManager.updateCart(cid, products);
+  
+        if (result.error) {
+          return response.status(404).json({ error: true, message: result.message });
+        }
+  
+        return response.status(200).json(result);
+      } catch (error) {
+        console.error('Error updating cart:', error);
+        return response.status(500).json({ error: true, message: 'Error al actualizar el carrito' });
+      }
+    },
+
+    async pcUpdateQuantity(request, response) {
+      try {
+        const { cid, pid } = request.params;
+        const quantity = request.body.quantity;
+  
+        const result = await cartManager.updateQuantity(cid, pid, quantity);
+  
+        if (result.error) {
+          return response.status(404).json({ error: true, message: result.message });
+        }
+  
+        return response.status(200).json(result);
+      } catch (error) {
+        console.error('Error updating cart item quantity:', error);
+        return response.status(500).json({ error: true, message: 'Error al actualizar la cantidad del producto en el carrito' });
+      }
+
+    },
+
+    async pcEmptyCart(request, response) {
+      try {
+        const cid = request.params.cid;
+
+        const emptyCart = await cartManager.emptyCart(cid);
+        
+        if (emptyCart.error) {
+          return response.status(404).json({message:"El carrito con el ID indicado no existe."})
+        } 
+
+        return response.status(200).json(emptyCart);
+      } catch (error) {
+        console.error('Error al intentar vaciar el carrito', error);
+        return response.status(500).json({ error:true, message:"Error al vaciar el carrito"})
+      }
     }
-}
+
+    
+
+  };
+
 
 export default cartController; 
 
