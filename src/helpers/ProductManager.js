@@ -18,14 +18,14 @@ class ProductManager {
         queryFilter.category = filter;
         }
 
-  const paginationOptions = {
-    page: parseInt(page),
-    limit: parseInt(limit),
-    sort: sortValue !== 0 ? { price: sortValue } : undefined,
-  };
+    const paginationOptions = {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        sort: sortValue !== 0 ? { price: sortValue } : undefined,
+    };
 
   try {
-    const result = await productModel.paginate(queryFilter, paginationOptions);
+    const result = await productModel.paginate(queryFilter, paginationOptions)
     const { docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } = result;
 
     const response = {
