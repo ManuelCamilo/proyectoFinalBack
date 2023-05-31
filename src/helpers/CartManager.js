@@ -44,6 +44,27 @@ class CartManager {
         throw error;
       }
     } 
+    
+    async deleteProductToCart(cartId, productId) {
+      try{
+        const cart = await cartModel.findById(cartId);
+        if (!cart) {
+          return {error: true, message: 'El carrito no existe' };
+        }
+
+        const productIndex = await cart.products.findIndex((item) => { return item.product && item.product.toString() === productId});
+        if (productIndex === -1) {
+          return { error: true, message: 'El producto no esta en el carrito' };
+        }
+        cart.products.splice(productIndex, 1);
+
+        await cart.save();
+        return { success: true, message: 'Producto eliminado del carrito'};
+      } catch (error) {
+        console.error('Error eliminando el producto del carrito', error);
+        throw error;
+      }
+    }
 
     
   }

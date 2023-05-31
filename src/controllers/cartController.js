@@ -40,6 +40,20 @@ const cartController = {
       } catch (error) {
         response.status(500).json({ error: true, message: 'Error al agregar producto al carrito' });
       }
+    },
+
+    async pcDeleteProductToCart(request, response) {
+      const { cid, pid } = request.params;
+      try {
+        const cart = await cartManager.deleteProductToCart(cid, pid);
+        if (cart.error) {
+          response.status(404).json(cart);
+        } else {
+          response.status(201).json({ message: 'El producto se elimino con éxito del carrito ', cart})
+        }
+      } catch (error) {
+        response.status(500)
+      }
     }
 }
 
