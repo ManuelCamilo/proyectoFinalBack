@@ -52,11 +52,14 @@ class CartManager {
         return {error: true, message: 'El carrito no existe' };
       }
 
-      const productIndex = await cart.products.findIndex((productItem) => productItem.product && productItem.product.toString() === productId.toString());
-
+      const productIndex = cart.products.findIndex(item => {
+        return item.product && item.product.equals(productId);
+      });
+  
       if (productIndex === -1) {
-        return { error: true, message: 'El producto no esta en el carrito' };
+        return { error: true, message: 'El producto no está en el carrito' };
       }
+      
       cart.products.splice(productIndex, 1);
 
       await cart.save();
