@@ -109,7 +109,6 @@ const cartController = {
         return response.status(500).json({ error:true, message:"Error al vaciar el carrito"})
       }
     }
-
     
 
   };

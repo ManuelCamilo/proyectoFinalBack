@@ -1,0 +1,70 @@
+<script>
+  function removeProduct(id) {
+    let cartId = prompt('Ingrese ID del carrito:');
+    fetch(`/api/carts/${cartId}/products/${id}`, {
+        method: "DELETE"
+    }).then(() => {
+      window.location.href = (`/carts/${cartId}`);
+    }).catch((error) => {
+      console.error('Error al eliminar el producto del carrito:', error);
+    });
+  }
+</script>
+<style>
+  .product-item {
+    display: flex;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+
+  .product-image {
+    margin-right: 10px;
+  }
+
+  .product-details {
+    flex-grow: 1;
+  }
+
+  .product-title {
+    margin-top: 0;
+    margin-bottom: 5px;
+  }
+
+  .product-description {
+    margin-bottom: 5px;
+  }
+
+  .product-price {
+    font-weight: bold;
+  }
+
+  .remove-button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+</style>
+
+<h1>Carrito de Compras</h1>
+
+{{#if cart}}
+  {{#each cart.products}}
+    <div class="product-item">
+      <div class="product-image">
+        <img src="{{this.product.thumbnail}}" alt="{{this.product.title}}" width="100">
+      </div>
+      <div class="product-details">
+        <h2 class="product-title">{{this.product.title}}</h2>
+        <p class="product-description">{{this.product.description}}</p>
+        <p class="product-price">Precio: {{this.product.price}}</p>
+      </div>
+      <button class="remove-button" onclick="removeProduct('{{this.product._id}}')">X</button>
+    </div>
+  {{/each}}
+{{else}}
+  <p>No se encontró el carrito.</p>
+{{/if}}

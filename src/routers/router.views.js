@@ -1,15 +1,14 @@
 import express from "express";
 import productModel from "../model/products.model.js";
-import ProductManager from "../helpers/productManager.js";
+import CartManager from "../helpers/cartManager.js";
+import cartModel from "../model/carts.model.js";
 
-const router = express.Router()
+const router = express.Router();
 
-const productManager = new ProductManager()
-
+const cartManager = new CartManager();
 
 router.get("/", async (request, response) => {
   const products = await productModel.find().lean().exec()
-  console.log(products) 
   response.render('index', { products })
   });
 
@@ -35,12 +34,6 @@ router.get("/products", async (request, response) => {
           queryFilter.category = filter;
         }
     
-        // const paginationOptions = {
-        //   page: parseInt(page),
-        //   limit: parseInt(limit),
-        //   sort: sortValue !== 0 ? { price: sortValue } : undefined,
-        // };
-    
         const result = await productModel.paginate(queryFilter, {
             page:parseInt(page),
             limit: parseInt(limit),
@@ -49,6 +42,9 @@ router.get("/products", async (request, response) => {
         });
         const { docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } = result;
     
+        const prevLinkQuery = query ? `query=${query}&filter=${filter}` : ''; // Genera la cadena de consulta para prevLink
+        const nextLinkQuery = query ? `query=${query}&filter=${filter}` : ''; // Genera la cadena de consulta para nextLink
+
         const productsResult = {
           status: "success",
           products: docs,
@@ -58,17 +54,30 @@ router.get("/products", async (request, response) => {
           page: page,
           hasPrevPage: hasPrevPage,
           hasNextPage: hasNextPage,
-          prevLink: hasPrevPage ? `/api/products?page=${prevPage}&limit=${limit}&sort=${sort}` : null,
-          nextLink: hasNextPage ? `/api/products?page=${nextPage}&limit=${limit}&sort=${sort}` : null,
+          prevLink: hasPrevPage ? `/products?page=${prevPage}&limit=${limit}&sort=${sort}&${prevLinkQuery}` : '',
+          nextLink: hasNextPage ? `/products?page=${nextPage}&limit=${limit}&sort=${sort}&${nextLinkQuery}` : '',
         };
-        // Intento de modularizar: No se puede renderizar si necesita buscar una propiedad en una constante, retornada por la funcion manager.
-        // Al parecer si renderiza si esta paginate y la info es del mismo archivo.. (errores handlebar y herencia)
-        // Probar una modularizacion que tenga la paginación en este mismo archivo.
+
         response.render("productList", {productsResult});
       } catch (error) {
         console.error("Error al obtener los productos:", error);
         response.status(500).send("Error interno del servidor");
       }
     });
+
+router.get("/carts/:cid", async (request, response) => {
+  const cid = request.params.cid
+  try {
+    const cart = await cartModel.findOne({ _id:cid }).lean();
+
+    response.render("cart", {cart});
+  } catch (error) {
+    console.error("No se pudo obtener el carrito: ", error);
+    response.status(500).send ("Error")
+  }
+  
+})
+
+
 
 export default router

@@ -1,3 +1,16 @@
+<script>
+  function addProduct(id) {
+    let cartId = prompt('Ingrese ID del carrito:');
+    fetch(`/api/carts/${cartId}/products/${id}`, {
+      method: "POST"
+    }).then(() => {
+      window.location.href = '/products';
+    }).catch((error) => {
+      console.error('Error al agregar el producto al carrito:', error);
+    });
+  }
+</script>
+
 <h1>Lista de Productos</h1>
 <table>
   <thead>
@@ -17,12 +30,18 @@
       <td>{{this.category}}</td>
       <td><a href="/products/{{this._id}}">Ver Detalles</a></td>
       <td>
-        <form action="/carts" method="POST">
-          <input type="hidden" name="productId" value="{{this._id}}">
-          <button type="submit">Agregar al Carrito</button>
-        </form>
+        <button onclick="addProduct('{{this._id}}')">Agregar al Carrito</button>
       </td>
     </tr>
     {{/each}}
   </tbody>
 </table>
+  <div>
+    {{#if productsResult.hasPrevPage}}
+      <a href="{{productsResult.prevLink}}">Anterior</a>
+    {{/if}}
+    |
+    {{#if productsResult.hasNextPage}}
+      <a href="{{productsResult.nextLink}}">Siguiente</a>
+    {{/if}}
+  </div>
