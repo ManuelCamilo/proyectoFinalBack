@@ -61,7 +61,9 @@ router.get("/products", async (request, response) => {
           prevLink: hasPrevPage ? `/api/products?page=${prevPage}&limit=${limit}&sort=${sort}` : null,
           nextLink: hasNextPage ? `/api/products?page=${nextPage}&limit=${limit}&sort=${sort}` : null,
         };
-    
+        // Intento de modularizar: No se puede renderizar si necesita buscar una propiedad en una constante, retornada por la funcion manager.
+        // Al parecer si renderiza si esta paginate y la info es del mismo archivo.. (errores handlebar y herencia)
+        // Probar una modularizacion que tenga la paginación en este mismo archivo.
         response.render("productList", {productsResult});
       } catch (error) {
         console.error("Error al obtener los productos:", error);

@@ -9,12 +9,19 @@
     </tr>
   </thead>
   <tbody>
-    {{#each products}}
+    {{#each productsResult.products}}
     <tr>
       <td>{{this.title}}</td>
       <td>{{this.description}}</td>
       <td>{{this.price}}</td>
       <td>{{this.category}}</td>
+      <td><a href="/products/{{this._id}}">Ver Detalles</a></td>
+      <td>
+        <form action="/carts" method="POST">
+          <input type="hidden" name="productId" value="{{this._id}}">
+          <button type="submit">Agregar al Carrito</button>
+        </form>
+      </td>
     </tr>
     {{/each}}
   </tbody>
