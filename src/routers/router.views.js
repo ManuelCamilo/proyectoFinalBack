@@ -32,8 +32,8 @@ router.get("/products", async (request, response) => {
           queryFilter.title = filter;
         } else if (query === "category") {
           queryFilter.category = filter;
-        }
-    
+        } 
+
         const result = await productModel.paginate(queryFilter, {
             page:parseInt(page),
             limit: parseInt(limit),
@@ -41,24 +41,26 @@ router.get("/products", async (request, response) => {
             lean:true
         });
         const { docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } = result;
-    
-        const prevLinkQuery = query ? `query=${query}&filter=${filter}` : ''; // Genera la cadena de consulta para prevLink
-        const nextLinkQuery = query ? `query=${query}&filter=${filter}` : ''; // Genera la cadena de consulta para nextLink
 
-        const productsResult = {
-          status: "success",
+        const user = request.session.user;
+
+        response.render('productList', {
           products: docs,
+          user: {
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            role: request.session.role
+          },
           totalPages: totalPages,
           prevPage: prevPage,
           nextPage: nextPage,
           page: page,
           hasPrevPage: hasPrevPage,
           hasNextPage: hasNextPage,
-          prevLink: hasPrevPage ? `/products?page=${prevPage}&limit=${limit}&sort=${sort}&${prevLinkQuery}` : '',
-          nextLink: hasNextPage ? `/products?page=${nextPage}&limit=${limit}&sort=${sort}&${nextLinkQuery}` : '',
-        };
-
-        response.render("productList", {productsResult});
+          prevLink: hasPrevPage ? `/products?page=${prevPage}&limit=${limit}&sort=${sort}&query=${query}&filter=${filter}` : '',
+          nextLink: hasNextPage ? `/products?page=${nextPage}&limit=${limit}&sort=${sort}&query=${query}&filter=${filter}` : ''
+        });
       } catch (error) {
         console.error("Error al obtener los productos:", error);
         response.status(500).send("Error interno del servidor");

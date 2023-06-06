@@ -6,6 +6,9 @@ import __dirname from './utils.js';
 import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
 import mongoose from 'mongoose';
+import sessionRouter from './routers/router.session.js';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 
 const uri = 'mongodb+srv://manuelcamilo16:C0d3r@coder.7izbpeb.mongodb.net/ecommerce'
 const app = express()
@@ -24,9 +27,24 @@ app.engine('handlebars', handlebars.engine())
 app.set('views', __dirname+'/views')
 app.set('view engine', 'handlebars') 
 
-app.use("/", routerViews);
+app.use(session({
+  store: MongoStore.create({ 
+    mongoUrl: uri,
+    dbName: "ecommerce",
+   }),
+   secret: "C0d3r",
+   resave: true,
+   saveUninitialized: true 
+}));
+
+
+
+app.use('/', routerViews);
 app.use('/api/products', routerProducts);
 app.use('/api/carts', routerCart);
+app.use('/session', sessionRouter)
+
+
 // app.use('/realtimeproducts', routerViews);
 
 
