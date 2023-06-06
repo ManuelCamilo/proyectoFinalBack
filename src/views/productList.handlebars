@@ -26,7 +26,7 @@
     </tr>
   </thead>
   <tbody>
-    {{#each productsResult.products}}
+    {{#each products}}
     <tr>
       <td>{{this.title}}</td>
       <td>{{this.description}}</td>
@@ -41,11 +41,11 @@
   </tbody>
 </table>
   <div>
-    {{#if productsResult.hasPrevPage}}
-      <a href="{{productsResult.prevLink}}">Anterior</a>
+    {{#if hasPrevPage}}
+      <a href="{{prevLink}}">Anterior</a>
     {{/if}}
     |
-    {{#if productsResult.hasNextPage}}
-      <a href="{{productsResult.nextLink}}">Siguiente</a>
+    {{#if hasNextPage}}
+      <a href="{{nextLink}}">Siguiente</a>
     {{/if}}
   </div>
