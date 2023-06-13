@@ -1,5 +1,6 @@
-import { Router } from "express";
+import { Router, response } from "express";
 import UserModel from "../model/user.model.js"
+import passport from "passport";
 
 
 const router = Router()
@@ -43,7 +44,6 @@ router.post('/login', async (request, response ) => {
       }
 });
 
-
 router.get('/logout', (request, response) => {
     request.session.destroy(err => {
         if (err) {
@@ -53,5 +53,14 @@ router.get('/logout', (request, response) => {
         }
     })
 })
+
+router.get('/github', passport.authenticate('github', {scope: ['user: email']}), (request, response) => {})
+
+router.get('/githubcallback', passport.authenticate('github', { failureRedirect:'/session/login'}),
+    async(request, response) => {
+        request.session.user = request.user
+        response.redirect('/products/')
+    }
+)
 
 export default router
