@@ -1,48 +1,46 @@
 import { Router, response } from "express";
 import UserModel from "../model/user.model.js"
 import passport from "passport";
+import { createHash, isValidPassword } from "../utils.js";
 
 
 const router = Router()
 
 router.get('/register', (request, response) => response.render('sessions/register')) //muestra form
 
-router.post('/register', async (request, response) => {
-    const userNew = request.body          // datos del form
-    const user = new UserModel(userNew)   // crea objeto usuario
-    await user.save()                     // guarda en bdd
-    response.redirect('/session/login')          
+router.post('/register', 
+    passport.authenticate('register', {failureRedirect: '/session/failureRegister'}),
+    async (request, response) => {
+        response.redirect('/session/login')          
+})
+
+router.get('/failureRegister', (request, response) => {
+    response.send({ error: 'failed!'})
 })
 
 router.get('/login', (request, response) => response.render('sessions/login'));
 
-router.post('/login', async (request, response ) => {
-    const { email, password } = request.body
-    const user = await UserModel.findOne({ email }).lean().exec()
-    if (!user) {
-        return response.status(401).render('errors/base', {
-            error: 'Error en email o contraseña'
-        })
+router.post('/login',
+    passport.authenticate('login', {failureRedirect: '/session/failLogin'}),
+    async (request, response ) => {
+
+    if (!request.user) {
+        return response.status(400).send({ status: 'error', error: 'Invalid credentials'})
+    }
+    
+    request.session.user ={
+        first_name: request.user.first_name,
+        last_name: request.user.last_name,
+        email: request.user.email,
+        age: request.user.age
     }
 
-    const passwordCorrect = (password === user.password);
-
-    if (!passwordCorrect) {
-        return response.status(401).render('errors/base', {
-        error: 'Error en email y/o contraseña'
-        });
-    }
-  
-    request.session.user = user;
-
-    if (user.email === 'adminCoder@coder.com') {
-        request.session.role = 'admin';
-        response.redirect('/products');
-      } else {
-        request.session.role = 'usuario';
-        response.redirect('/products');
-      }
+    response.redirect('/products')
 });
+
+router.get('/failLogin', (request, response) => {
+    response.send({ error: 'Fail in login'})
+})
 
 router.get('/logout', (request, response) => {
     request.session.destroy(err => {

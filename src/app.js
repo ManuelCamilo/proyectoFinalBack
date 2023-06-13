@@ -8,9 +8,9 @@ import { Server } from 'socket.io';
 import mongoose from 'mongoose';
 import sessionRouter from './routers/router.session.js';
 import session from 'express-session';
-import MongoStore from 'connect-mongo';
 import initializePassport from './config/passport.config.js'
 import passport from 'passport';
+import MongoStore from 'connect-mongo';
 
 const uri = 'mongodb+srv://manuelcamilo16:C0d3r@coder.7izbpeb.mongodb.net/ecommerce'
 const app = express()
@@ -29,10 +29,10 @@ app.set('views', __dirname+'/views')
 app.set('view engine', 'handlebars') 
 
 app.use(session({
-  // store: MongoStore.create({ 
-  //   mongoUrl: uri,
-  //   dbName: "ecommerce",
-  //  }),
+  store: MongoStore.create({ 
+    mongoUrl: uri,
+    dbName: "ecommerce",
+   }),
    secret: "C0d3r",
    resave: true,
    saveUninitialized: true 
