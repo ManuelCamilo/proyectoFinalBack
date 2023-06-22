@@ -50,7 +50,7 @@ router.get("/products", async (request, response) => {
           first_name: user.first_name,
           last_name: user.last_name,
           email: user.email,
-          role: request.session.role
+          role: user.role
         },
         totalPages: totalPages,
         prevPage: prevPage,
