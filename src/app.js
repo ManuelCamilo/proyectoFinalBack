@@ -46,7 +46,7 @@ app.use(passport.session())
 app.use('/', routerViews);
 app.use('/api/products', routerProducts);
 app.use('/api/carts', routerCart);
-app.use('/session', sessionRouter)
+app.use('/api/session', sessionRouter)
 
 
 // app.use('/realtimeproducts', routerViews);

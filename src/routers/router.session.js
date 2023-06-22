@@ -9,9 +9,9 @@ const router = Router()
 router.get('/register', (request, response) => response.render('sessions/register')) //muestra form
 
 router.post('/register', 
-    passport.authenticate('register', {failureRedirect: '/session/failureRegister'}),
+    passport.authenticate('register', {failureRedirect: '/api/session/failureRegister'}),
     async (request, response) => {
-        response.redirect('/session/login')          
+        response.redirect('/api/session/login')          
 })
 
 router.get('/failureRegister', (request, response) => {
@@ -21,7 +21,7 @@ router.get('/failureRegister', (request, response) => {
 router.get('/login', (request, response) => response.render('sessions/login'));
 
 router.post('/login',
-    passport.authenticate('login', {failureRedirect: '/session/failLogin'}),
+    passport.authenticate('login', {failureRedirect: '/api/session/failLogin'}),
     async (request, response ) => {
 
     if (!request.user) {
@@ -48,18 +48,26 @@ router.get('/logout', (request, response) => {
         if (err) {
             response.status(500).render('errors/base', {error: err})
         } else {
-            response.redirect('/session/login')
+            response.redirect('/api/session/login')
         }
     })
 })
 
 router.get('/github', passport.authenticate('github', {scope: ['user: email']}), (request, response) => {})
 
-router.get('/githubcallback', passport.authenticate('github', { failureRedirect:'/session/login'}),
+router.get('/githubcallback', passport.authenticate('github', { failureRedirect:'/api/session/login'}),
     async(request, response) => {
         request.session.user = request.user
         response.redirect('/products/')
     }
 )
+
+router.get('/current', (request, response) => {
+    if (request.session.user) {
+    response.status(200).json({ user: request.session.user });
+    } else {
+    response.status(401).json({ error: 'Session not found' });
+    }
+  });
 
 export default router
