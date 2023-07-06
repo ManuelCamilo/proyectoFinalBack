@@ -1,7 +1,7 @@
 import express from "express";
-import productModel from "../model/products.model.js";
-import CartManager from "../helpers/cartManager.js";
-import cartModel from "../model/carts.model.js";
+import productModel from "../dao/model/products.model.js";
+import CartManager from "../dao/helpers/cartManager.js";
+import cartModel from "../dao/model/carts.model.js";
 
 const router = express.Router();
 

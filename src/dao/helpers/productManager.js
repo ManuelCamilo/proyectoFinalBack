@@ -1,4 +1,4 @@
-import productModel from "../model/products.model.js";
+import productModel from '../model/products.model.js'
 
 class ProductManager {
     async getProducts(options) {

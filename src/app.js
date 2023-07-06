@@ -11,12 +11,14 @@ import session from 'express-session';
 import initializePassport from './config/passport.config.js'
 import passport from 'passport';
 import MongoStore from 'connect-mongo';
+import config from './config/config.js';
 
-const uri = 'mongodb+srv://manuelcamilo16:C0d3r@coder.7izbpeb.mongodb.net/ecommerce'
+const uri = config.uri
+
 const app = express()
+const port = config.port || 8080
 
-
-const server = app.listen(8080, () => console.log('Server Up'));
+const server = app.listen(port, () => console.log(`Server Up on port ${port}`));
 const io = new Server(server) 
 
 app.use(express.json());

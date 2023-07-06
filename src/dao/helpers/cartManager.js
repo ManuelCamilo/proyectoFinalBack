@@ -1,6 +1,5 @@
 
-import cartModel from "../model/carts.model.js";
-
+import cartModel from '../model/carts.model.js'
 
 class CartManager {
   async getCartById(id) {
