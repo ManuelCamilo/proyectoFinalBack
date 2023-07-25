@@ -1,7 +1,6 @@
-import ProductManager from "../dao/helpers/productManager.js";
+import ProductService from "../services/productService.js";
 
-
-const productManager = new ProductManager()
+const productService = new ProductService();
 
 const ProductController = { 
     async pcGetAll(request, response) {
@@ -16,7 +15,7 @@ const ProductController = {
             filter: filter,
           };
     
-          const result = await productManager.getProducts(options);
+          const result = await productService.getAllProducts(options);
             response.status(200).json(result);
             // response.render('index', { products });
         } catch (error) {
@@ -27,7 +26,7 @@ const ProductController = {
     async pcGetByID(request,response) {
         try{
             const { pid } = request.params;
-            const product = await productManager.getProductsById(pid);
+            const product = await productService.getProductById(pid);
             if (product) {
                 response.status(200).json(product);
             } else {
@@ -40,7 +39,7 @@ const ProductController = {
 
     async pcCreateProduct(request,response) {
         try{
-            const productoNuevo = await productManager.addProduct(request.body);
+            const productoNuevo = await productService.addProduct(request.body);
             response.status(201).json({ message: 'Producto agregado con éxito' })
         } catch (error) {
             response.status(500).json({ message: 'Error al agregar el producto' })
@@ -49,7 +48,7 @@ const ProductController = {
 
     async pcUpdateProduct(request,response) {
         try {
-            const updatedProduct = await productManager.updateProduct(request.params.pid,request.body)
+            const updatedProduct = await productService.updateProduct(request.params.pid,request.body)
         if (!updatedProduct) {
             return response.status(404).json({ message: 'Producto no encontrado' });
         }
@@ -61,7 +60,7 @@ const ProductController = {
 
     async pcDeleteProduct(request,response) {
         try{
-            const deletedProduct = await productManager.deleteProduct(request.params.pid);
+            const deletedProduct = await productService.deleteProduct(request.params.pid);
             if (deletedProduct) {
                 response.status(200).json({ message: 'Producto eliminado del catálogo' });
             } else {

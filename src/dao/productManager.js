@@ -1,6 +1,7 @@
 import productModel from '../model/products.model.js'
+import ProductRepository from '../services/Repository.js';
 
-class ProductManager {
+export default class ProductManager extends ProductRepository {
     async getProducts(options) {
     const { limit = 10, page = 1, sort, query, filter } = options;
     
@@ -84,21 +85,11 @@ class ProductManager {
     async deleteProduct(id) {
         try {
             const deletedproduct = await productModel.findByIdAndDelete(id);
-            if (deletedproduct) {
-                console.log('Producto eliminado', deletedproduct);
-                return true;
-            } else {
-                return false
-            }
+            return !!deletedproduct
         } catch(error) {
-            console.error("Error intentando eliminar el producto");
+            console.error("Error al eliminar el producto", error);
             throw error;
         }
     }
 
 }
-
-
-
-export default ProductManager;
-

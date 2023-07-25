@@ -1,4 +1,3 @@
-
 import cartModel from '../model/carts.model.js'
 
 class CartManager {

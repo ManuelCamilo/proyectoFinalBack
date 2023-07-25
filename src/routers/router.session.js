@@ -1,7 +1,7 @@
 import { Router, response } from "express";
 // import userModel from "../dao/model/user.model";
 import passport from "passport";
-
+import currentDTO from "../dto/sessionDTO.js"; 
 
 const router = Router()
 
@@ -63,10 +63,11 @@ router.get('/githubcallback', passport.authenticate('github', { failureRedirect:
 
 router.get('/current', (request, response) => {
     if (request.session.user) {
-    response.status(200).json({ user: request.session.user });
+        const sessionDTO = new currentDTO(request.session.user)
+        response.status(200).json({ currentSession: sessionDTO});
     } else {
     response.status(401).json({ error: 'Session not found' });
     }
-  });
+});
 
 export default router
