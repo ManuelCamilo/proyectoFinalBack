@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+const ticketCollection = "ticket";
+
 const ticketSchema = new mongoose.Schema({
     code: {type: String, unique: true, required: true,},
     purchase_datetime: {type: Date, default: Date.now,},
@@ -8,6 +10,6 @@ const ticketSchema = new mongoose.Schema({
 });
 
 
-const Ticket = mongoose.model("Ticket", ticketSchema);
+const ticketModel = mongoose.model(ticketCollection, ticketSchema);
 
-export default Ticket
+export default ticketModel;

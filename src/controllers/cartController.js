@@ -108,10 +108,24 @@ const cartController = {
         console.error('Error al intentar vaciar el carrito', error);
         return response.status(500).json({ error:true, message:"Error al vaciar el carrito"})
       }
-    }
+    },
     
-
-  };
+    async pcPurchaseCart(request, response) {
+      const cid = request.params.cid;
+      const purchaserEmail = request.session.user.email;
+      try {
+        const purchaseResult = await cartManager.purchaseCart(cid, purchaserEmail);
+        if (purchaseResult.error) {
+          return response.status(400).json(purchaseResult);
+        }
+  
+        return response.status(200).json({ message: "Compra realizada con éxito", ticket: purchaseResult.ticket });
+      } catch (error) {
+        console.error("Error al realizar la compra:", error);
+        return response.status(500).json({ error: true, message: "Error al realizar la compra" });
+      }
+    }
+};
 
 
 export default cartController; 
