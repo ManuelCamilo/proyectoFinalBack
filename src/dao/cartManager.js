@@ -1,7 +1,8 @@
 import cartModel from '../model/carts.model.js';
 import ticketModel from '../model/ticket.model.js';
+import CartRepository from '../services/cartRepository.js';
 
-class CartManager {
+export default class CartManager extends CartRepository{
   async getCartById(id) {
     try {
       const cart = await cartModel.findById(id).populate('products.product');
@@ -193,4 +194,3 @@ class CartManager {
   }
 
 }
-  export default CartManager;

@@ -7,4 +7,13 @@ const isAdmin = (request, response, next) => {
     }
 }
 
-export default isAdmin;
+const isUser = (request, response, next) => {
+    const userRole = "user";
+    if (request.session.user && request.session.user.role === userRole) {
+      next();
+    } else {
+      response.status(401).json({ error: "Acceso no autorizado" });
+    }
+};
+
+export default { isAdmin, isUser };

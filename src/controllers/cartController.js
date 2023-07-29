@@ -1,11 +1,11 @@
-import CartManager from "../dao/cartManager.js";
+import CartService from "../services/cartService.js"
 
-const cartManager = new CartManager();
+const cartService = new CartService();
 
 const cartController = {
     async pcCreateCart(request, response) {
       try {
-        const newCart = await cartManager.createCart();
+        const newCart = await cartService.createCart();
         response.status(201).json({ message: 'Carrito creado con éxito!', cart: newCart })
       } catch (error) {
         console.error("Error creating cart:", error);
@@ -16,7 +16,7 @@ const cartController = {
     async pcGetCart (request, response) {
         const cid = request.params.cid;
         try{
-          const cart = await cartManager.getCartById(cid);
+          const cart = await cartService.getCartById(cid);
           if (!cart) {
               return response.status(404).json({ message: `No se encuentra el carrito con el id ${cid}`})
           }
@@ -31,7 +31,7 @@ const cartController = {
     async pcAddProductToCart(request, response) {
       const { cid, pid } = request.params;
       try {
-        const cart = await cartManager.addProductToCart(cid, pid);
+        const cart = await cartService.addProductToCart(cid, pid);
         if (cart.error) {
           response.status(404).json(cart);
         } else {
@@ -45,7 +45,7 @@ const cartController = {
     async pcDeleteProductToCart(request, response) {
       const { cid, pid } = request.params;
       try {
-        const cart = await cartManager.deleteProductToCart(cid, pid);
+        const cart = await cartService.deleteProductToCart(cid, pid);
         if (cart.error) {
           response.status(404).json(cart);
         } else {
@@ -61,7 +61,7 @@ const cartController = {
         const cid  = request.params.cid;
         const products = request.body.products;
   
-        const result = await cartManager.updateCart(cid, products);
+        const result = await cartService.updateCart(cid, products);
   
         if (result.error) {
           return response.status(404).json({ error: true, message: result.message });
@@ -79,7 +79,7 @@ const cartController = {
         const { cid, pid } = request.params;
         const quantity = request.body.quantity;
   
-        const result = await cartManager.updateQuantity(cid, pid, quantity);
+        const result = await cartService.updateQuantity(cid, pid, quantity);
   
         if (result.error) {
           return response.status(404).json({ error: true, message: result.message });
@@ -97,7 +97,7 @@ const cartController = {
       try {
         const cid = request.params.cid;
 
-        const emptyCart = await cartManager.emptyCart(cid);
+        const emptyCart = await cartService.emptyCart(cid);
         
         if (emptyCart.error) {
           return response.status(404).json({message:"El carrito con el ID indicado no existe."})
@@ -114,7 +114,7 @@ const cartController = {
       const cid = request.params.cid;
       const purchaserEmail = request.session.user.email;
       try {
-        const purchaseResult = await cartManager.purchaseCart(cid, purchaserEmail);
+        const purchaseResult = await cartService.purchaseCart(cid, purchaserEmail);
         if (purchaseResult.error) {
           return response.status(400).json(purchaseResult);
         }

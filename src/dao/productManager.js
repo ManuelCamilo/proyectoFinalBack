@@ -1,5 +1,5 @@
 import productModel from '../model/products.model.js'
-import ProductRepository from '../services/Repository.js';
+import ProductRepository from '../services/productRepository.js';
 
 export default class ProductManager extends ProductRepository {
     async getProducts(options) {
