@@ -1,6 +1,7 @@
 import cartModel from '../model/carts.model.js';
 import ticketModel from '../model/ticket.model.js';
 import CartRepository from '../services/cartRepository.js';
+import { mailConfig } from '../config/billconfig.js';
 
 export default class CartManager extends CartRepository{
   async getCartById(id) {
@@ -128,12 +129,41 @@ export default class CartManager extends CartRepository{
       throw error;
     }
   }
+  
   async purchaseCart(cartId, purchaserEmail) {
     try {
+      const { transporter, genEmail } = mailConfig;
       const cart = await cartModel.findById(cartId).populate('products.product');
       if (!cart) {
         return { error: true, message: 'El carrito no existe' };
       }
+      const montoTotal = cart.products.reduce((total, item) => total + item.quantity * item.product.price, 0);
+
+      const productos = cart.products.map((item) => ({
+        name: item.product.name,
+        description: item.product.description,
+        quantity: item.quantity,
+        price: item.product.price,
+      }))
+
+
+      const contenidoCorreo = genEmail(purchaserEmail, productos, montoTotal);
+
+
+      const message = {
+        from: process.env.GMAIL_USER,
+        to: purchaserEmail,
+        subject: 'Factura de compra',
+        html: contenidoCorreo,
+      };
+
+      await transporter.sendMail(message);
+
+      console.log('Correo enviado.');
+
+      const ticket = await this.createTicket(cartId, purchaserEmail);
+
+      
 
       const productsToRemove = [];
   
@@ -148,10 +178,7 @@ export default class CartManager extends CartRepository{
       }
       
       cart.products = cart.products.filter(item => !productsToRemove.includes(item.product._id));
-
-
-      const ticket = await this.createTicket(cartId, purchaserEmail);
-
+      
       await cart.save();
 
       return { ticket: ticket };
@@ -169,8 +196,15 @@ export default class CartManager extends CartRepository{
       }
 
       let amount = 0;
+      const products = [];
       for (const item of cart.products) {
         amount += item.product.price * item.quantity;
+        products.push({
+          name: item.product.name,
+          description: item.product.description,
+          quantity: item.quantity,
+          price: item.product.price,
+        })
       }
 
       const ticketCount = await ticketModel.countDocuments();
