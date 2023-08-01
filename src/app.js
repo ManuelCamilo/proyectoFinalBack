@@ -50,7 +50,6 @@ app.use('/api/products', routerProducts);
 app.use('/api/carts', routerCart);
 app.use('/api/session', sessionRouter)
 
-
 // app.use('/realtimeproducts', routerViews);
 
 

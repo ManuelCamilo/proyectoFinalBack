@@ -1,7 +1,7 @@
 import cartModel from '../model/carts.model.js';
 import ticketModel from '../model/ticket.model.js';
 import CartRepository from '../services/cartRepository.js';
-import { mailConfig } from '../config/billconfig.js';
+import { mailConfig } from '../config/emailConfig.js';
 
 export default class CartManager extends CartRepository{
   async getCartById(id) {

@@ -1,4 +1,5 @@
 import ProductService from "../services/productService.js";
+import { generateProduct } from "../utils.js";
 
 const productService = new ProductService();
 
@@ -69,7 +70,21 @@ const ProductController = {
         } catch (error) {
             return response.status(200).json ({message: 'Producto eliminado del catalogo'})
         }
+    },
+
+    async pcMockProduct (request, response) {
+        try {
+            const products = []
+            for (let index = 0; index < 100; index++) {
+                products.push(generateProduct())
+            }
+            response.send({ status: 'success', payload:products})
+        } catch {
+            response.status(400).json({message: 'error'});
+        }
     }
+
+    
 }
 
 
