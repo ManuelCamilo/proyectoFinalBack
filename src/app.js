@@ -12,6 +12,7 @@ import initializePassport from './config/passport.config.js'
 import passport from 'passport';
 import MongoStore from 'connect-mongo';
 import config from './config/config.js';
+import errorHandler from './services/errors/error.js'
 
 const uri = config.uri
 
@@ -49,7 +50,7 @@ app.use('/', routerViews);
 app.use('/api/products', routerProducts);
 app.use('/api/carts', routerCart);
 app.use('/api/session', sessionRouter)
-
+app.use(errorHandler)
 // app.use('/realtimeproducts', routerViews);
 
 

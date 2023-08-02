@@ -1,5 +1,7 @@
 import productModel from '../model/products.model.js'
 import ProductRepository from '../services/productRepository.js';
+import CustomError from '../services/errors/CustomError.js';
+import EErros from '../services/errors/EErros.js';
 
 export default class ProductManager extends ProductRepository {
     async getProducts(options) {
@@ -44,8 +46,13 @@ export default class ProductManager extends ProductRepository {
 
     return response;
         } catch (error) {
-          console.error("Error al obtener los productos:", error);
-          throw error;
+            console.error("Error al obtener los productos:", error);
+            throw new CustomError.createError({
+              name: "Error al obtener los productos",
+              cause: error,
+              message: "Se produjo un error al intentar obtener la lista de productos.",
+              code: EErros.GET_PRODUCTS_ERROR,
+            });
         }
     }
 
@@ -54,8 +61,13 @@ export default class ProductManager extends ProductRepository {
             const foundProduct = await productModel.findById(pid);
             return foundProduct;
         } catch (error) {
-            console.error("Error al obtener el producto: ", error);
-            throw error;
+            // console.error("Error al obtener el producto:", error);
+            throw new CustomError.createError({
+              name: "Producto no encontrado",
+              cause: error,
+              message: "El producto solicitado no fue encontrado en la base de datos.",
+              code: EErros.PRODUCT_NOT_FOUND,
+            });
         }
     }
 
@@ -64,8 +76,13 @@ export default class ProductManager extends ProductRepository {
             const newProduct = await productModel.create(product);
             return newProduct;
         } catch (error) {
-            console.error("Error agregando el producto:");
-            throw error
+            console.error("Error agregando el producto:", error);
+            throw new CustomError.createError({
+              name: "Error al agregar el producto",
+              cause: error,
+              message: "Se produjo un error al intentar agregar el producto.",
+              code: EErros.ADD_PRODUCT_ERROR,
+            });
         }
     }
     
@@ -75,21 +92,30 @@ export default class ProductManager extends ProductRepository {
                 id,
                 { $set: updatedFields },
                 { new:true }
-            );
+            );        
             return product;
         } catch (error) {
-            console.error("Error al actualizar el producto");
-            throw error
-        }
+            console.error("Error al actualizar el producto:", error);
+            throw new CustomError.createError({
+              name: "Error al actualizar el producto",
+              cause: error,
+              message: "Se produjo un error al intentar actualizar el producto.",
+              code: EErros.UPDATE_PRODUCT_ERROR,
+            });
+          }
     }
     async deleteProduct(id) {
         try {
             const deletedproduct = await productModel.findByIdAndDelete(id);
             return !!deletedproduct
-        } catch(error) {
-            console.error("Error al eliminar el producto", error);
-            throw error;
+        } catch (error) {
+            console.error("Error al eliminar el producto:", error);
+            throw new CustomError.createError({
+              name: "Error al eliminar el producto",
+              cause: error,
+              message: "Se produjo un error al intentar eliminar el producto.",
+              code: EErros.DELETE_PRODUCT_ERROR,
+            });
         }
     }
-
 }
