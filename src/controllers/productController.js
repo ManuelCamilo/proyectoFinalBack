@@ -1,5 +1,7 @@
 import ProductService from "../services/productService.js";
 import { generateProduct } from "../utils.js";
+import logger from "../services/logger.js";
+
 
 const productService = new ProductService();
 
@@ -20,6 +22,7 @@ const ProductController = {
             response.status(200).json(result);
             // response.render('index', { products });
         } catch (error) {
+            logger.error('Error al obtener los productos', error)
             response.status(500).json({ message: 'Error al obtener los productos' });
         }
     },
@@ -34,6 +37,7 @@ const ProductController = {
                 response.status(404).json({ message: `El producto con el id ${pid} no se encuentra`});
             }
         } catch (error) {
+            logger.error('Error al obtener el producto:', error)
             response.status(500).json({ message: 'Error al obtener el producto'});
         }
     },
@@ -43,6 +47,7 @@ const ProductController = {
             const productoNuevo = await productService.addProduct(request.body);
             response.status(201).json({ message: 'Producto agregado con éxito' })
         } catch (error) {
+            logger.error('Error al agregar el producto:', error);
             response.status(500).json({ message: 'Error al agregar el producto' })
         }
     },
@@ -51,10 +56,12 @@ const ProductController = {
         try {
             const updatedProduct = await productService.updateProduct(request.params.pid,request.body)
         if (!updatedProduct) {
+            logger.warning('Producto no encontrado')
             return response.status(404).json({ message: 'Producto no encontrado' });
         }
         response.status(200).json({ message: 'Producto actualizado con éxito'});
         } catch (error) {
+            logger.error('Error al actualizar el producto.', error);
             response.status(400).json({message: error.message});
         }
     },
@@ -65,9 +72,11 @@ const ProductController = {
             if (deletedProduct) {
                 response.status(200).json({ message: 'Producto eliminado del catálogo' });
             } else {
+                logger.warning('Producto no encontrado')
                 response.status(404).json({ message: 'Producto no encontrado' });
             }
         } catch (error) {
+            logger.error('Error al eliminar el producto')
             return response.status(200).json ({message: 'Producto eliminado del catalogo'})
         }
     },

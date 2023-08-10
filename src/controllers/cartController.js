@@ -1,4 +1,5 @@
 import CartService from "../services/cartService.js"
+import logger from "../services/logger.js";
 
 const cartService = new CartService();
 
@@ -8,7 +9,7 @@ const cartController = {
         const newCart = await cartService.createCart();
         response.status(201).json({ message: 'Carrito creado con éxito!', cart: newCart })
       } catch (error) {
-        console.error("Error creating cart:", error);
+        logger.error('Error al crear el carrito:', error);
         response.status(500).json({ error: "Internal Server Error" });
       }
     },
@@ -18,11 +19,12 @@ const cartController = {
         try{
           const cart = await cartService.getCartById(cid);
           if (!cart) {
+              logger.warning(`No se encuentra el carrito con el id ${cid}`);
               return response.status(404).json({ message: `No se encuentra el carrito con el id ${cid}`})
           }
           response.status(200).json(cart);
         } catch(error) {
-          console.error("Error.", error);
+          logger.error('Error al obtener el carrito:', error);
           response.status(500).json({ message:'error al obtener el carrito '})
         }
 
@@ -38,7 +40,8 @@ const cartController = {
           response.status(201).json({ message: 'Producto agregado con éxito' });
         }
       } catch (error) {
-        response.status(500).json({ error: true, message: 'Error al agregar producto al carrito' });
+        logger.error('Error al agregar producto al carrito:', error);
+        response.status(500).json({ message: 'Error al agregar producto al carrito' });
       }
     },
 
@@ -52,7 +55,8 @@ const cartController = {
           response.status(201).json({ message: 'El producto se elimino con éxito del carrito ', cart})
         }
       } catch (error) {
-        response.status(500)
+        logger.error('Error al eliminar producto del carrito:', error);
+        response.status(500).json({ message: 'Error al eliminar el producto del carrito'})
       }
     },
 
@@ -69,8 +73,8 @@ const cartController = {
   
         return response.status(200).json(result);
       } catch (error) {
-        console.error('Error updating cart:', error);
-        return response.status(500).json({ error: true, message: 'Error al actualizar el carrito' });
+        logger.error('Error al actualizar el carrito:', error);
+        return response.status(500).json({ message: 'Error al actualizar el carrito' });
       }
     },
 
@@ -82,15 +86,14 @@ const cartController = {
         const result = await cartService.updateQuantity(cid, pid, quantity);
   
         if (result.error) {
-          return response.status(404).json({ error: true, message: result.message });
+          return response.status(404).json({ message: result.message });
         }
   
         return response.status(200).json(result);
       } catch (error) {
-        console.error('Error updating cart item quantity:', error);
-        return response.status(500).json({ error: true, message: 'Error al actualizar la cantidad del producto en el carrito' });
+        logger.error('Error al actualizar la cantidad del producto en el carrito:', error);
+        return response.status(500).json({message: 'Error al actualizar la cantidad del producto en el carrito' });
       }
-
     },
  
     async pcEmptyCart(request, response) {
@@ -105,8 +108,8 @@ const cartController = {
 
         return response.status(200).json(emptyCart);
       } catch (error) {
-        console.error('Error al intentar vaciar el carrito', error);
-        return response.status(500).json({ error:true, message:"Error al vaciar el carrito"})
+        logger.error('Error al vaciar el carrito:', error);
+        return response.status(500).json({ message:"Error al vaciar el carrito"})
       }
     },
     
@@ -121,8 +124,8 @@ const cartController = {
   
         return response.status(200).json({ message: "Compra realizada con éxito", ticket: purchaseResult.ticket });
       } catch (error) {
-        console.error("Error al realizar la compra:", error);
-        return response.status(500).json({ error: true, message: "Error al realizar la compra" });
+        logger.error('Error al realizar la compra:', error);
+        return response.status(500).json({ message: "Error al realizar la compra" });
       }
     }
 };

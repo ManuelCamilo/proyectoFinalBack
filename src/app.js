@@ -13,6 +13,7 @@ import passport from 'passport';
 import MongoStore from 'connect-mongo';
 import config from './config/config.js';
 import errorHandler from './services/errors/error.js'
+import loggerController from './controllers/loggerController.js'
 
 const uri = config.uri
 
@@ -49,7 +50,8 @@ app.use(passport.session())
 app.use('/', routerViews);
 app.use('/api/products', routerProducts);
 app.use('/api/carts', routerCart);
-app.use('/api/session', sessionRouter)
+app.use('/api/session', sessionRouter);
+app.get('/loggerTest',loggerController.testLogger);
 app.use(errorHandler)
 // app.use('/realtimeproducts', routerViews);
 

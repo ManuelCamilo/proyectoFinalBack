@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import ProductController from '../controllers/productController.js';
-import isAdmin from '../services/role.js';
+// import isAdmin from '../services/role.js';
 
 const router = Router();
 
