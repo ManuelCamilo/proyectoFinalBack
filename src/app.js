@@ -51,6 +51,7 @@ app.use('/', routerViews);
 app.use('/api/products', routerProducts);
 app.use('/api/carts', routerCart);
 app.use('/api/session', sessionRouter);
+app.use('/api/recover-password', recoverRouter);
 app.get('/loggerTest',loggerController.testLogger);
 app.use(errorHandler)
 // app.use('/realtimeproducts', routerViews);
