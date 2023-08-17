@@ -116,6 +116,7 @@ const cartController = {
     async pcPurchaseCart(request, response) {
       const cid = request.params.cid;
       const purchaserEmail = request.session.user.email;
+      console.log(purchaserEmail)
       try {
         const purchaseResult = await cartService.purchaseCart(cid, purchaserEmail);
         if (purchaseResult.error) {

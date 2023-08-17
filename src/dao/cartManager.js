@@ -1,7 +1,7 @@
 import cartModel from '../model/carts.model.js';
 import ticketModel from '../model/ticket.model.js';
 import CartRepository from '../services/cartRepository.js';
-import { mailConfig } from '../config/emailConfig.js';
+import emailConfig from '../config/emailConfig.js'
 
 export default class CartManager extends CartRepository{
   async getCartById(id) {
@@ -130,9 +130,10 @@ export default class CartManager extends CartRepository{
     }
   }
   
+  
   async purchaseCart(cartId, purchaserEmail) {
     try {
-      const { transporter, genEmail } = mailConfig;
+      const { transporter, mailGenerator } = emailConfig;
       const cart = await cartModel.findById(cartId).populate('products.product');
       if (!cart) {
         return { error: true, message: 'El carrito no existe' };
@@ -147,19 +148,38 @@ export default class CartManager extends CartRepository{
       }))
 
 
-      const contenidoCorreo = genEmail(purchaserEmail, productos, montoTotal);
-
-
+      const emailContent = {
+        body: {
+          name: purchaserEmail,
+          intro: 'Gracias por tu compra. Aquí está el detalle de tu factura:',
+          table: {
+            data: productos.map((producto) => ({
+              item: producto.name,
+              description: producto.description,
+              quantity: producto.quantity,
+              price: producto.price,
+            })),
+          },
+          total: {
+            text: 'Total',
+            price: montoTotal,
+          },
+          outro: 'Si tiene alguna pregunta, no dudes en contactarnos.',
+        },
+      };
+      
+      const contenidoCorreo = mailGenerator.generate(emailContent);
+  
       const message = {
         from: process.env.GMAIL_USER,
         to: purchaserEmail,
         subject: 'Factura de compra',
         html: contenidoCorreo,
       };
-
+  
       await transporter.sendMail(message);
-
-      console.log('Correo enviado.');
+  
+      console.log('Correo de factura enviado.');
 
       const ticket = await this.createTicket(cartId, purchaserEmail);
 

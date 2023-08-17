@@ -14,6 +14,7 @@ import MongoStore from 'connect-mongo';
 import config from './config/config.js';
 import errorHandler from './services/errors/error.js'
 import loggerController from './controllers/loggerController.js'
+import routerRecovery from './routers/router.recover.js'
 
 const uri = config.uri
 
@@ -51,7 +52,7 @@ app.use('/', routerViews);
 app.use('/api/products', routerProducts);
 app.use('/api/carts', routerCart);
 app.use('/api/session', sessionRouter);
-app.use('/api/recover-password', recoverRouter);
+app.use('/api/recover-password', routerRecovery);
 app.get('/loggerTest',loggerController.testLogger);
 app.use(errorHandler)
 // app.use('/realtimeproducts', routerViews);

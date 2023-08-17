@@ -2,6 +2,7 @@ import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import bcrypt from 'bcrypt'
 import { fakerES as faker } from '@faker-js/faker'
+import jwt from 'jsonwebtoken'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname (__filename)
 
@@ -28,5 +29,8 @@ export const generateProduct = () => {
     }
 }
 
+export const generateToken1h = user => {
+    const token1h = jwt.sign({ user }, PRIVATE_KEY, {expriesIn: '1h'})
+}
 
 export default __dirname

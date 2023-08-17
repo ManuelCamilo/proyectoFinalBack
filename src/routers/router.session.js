@@ -1,4 +1,4 @@
-import { Router, response } from "express";
+import { Router } from "express";
 // import userModel from "../dao/model/user.model";
 import passport from "passport";
 import currentDTO from "../dto/sessionDTO.js"; 
