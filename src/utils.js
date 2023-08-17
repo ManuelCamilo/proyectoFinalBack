@@ -30,7 +30,8 @@ export const generateProduct = () => {
 }
 
 export const generateToken1h = user => {
-    const token1h = jwt.sign({ user }, PRIVATE_KEY, {expriesIn: '1h'})
+    const token1h = jwt.sign({ user }, PRIVATE_KEY, {expiresIn: '1h'})
+    return token1h
 }
 
 export default __dirname

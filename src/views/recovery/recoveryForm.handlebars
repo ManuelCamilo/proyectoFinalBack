@@ -2,5 +2,8 @@
     <form action="/api/recover-password/sendRecoveryEmail" method="post">
         <label for="email">Correo Electrónico:</label>
         <input type="email" name="email" id="email" required>
+        {{#if emailNotRegistered}}
+        <p>El correo electrónico no está registrado.</p>
+        {{/if}}
         <button type="submit" name="sendRecoveryEmail">Enviar enlace de recuperación</button>
     </form>

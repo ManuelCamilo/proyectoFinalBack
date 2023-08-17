@@ -15,7 +15,7 @@ const recoveryController = {
     const email = request.body.email;
     const user = await userModel.findOne({ email });
     if (!user) {
-      return response.render('recovery/recoveryForm', { error: 'El correo electrónico no está registrado' });
+      return response.render('recovery/recoveryForm', { error: 'El correo electrónico no está registrado', emailNotRegistered: true });
     }
 
     const token = jwt.sign({ email }, process.env.PRIVATE_KEY, { expiresIn: '1h' });
@@ -31,7 +31,7 @@ const recoveryController = {
 
     await emailConfig.transporter.sendMail(mailOptions);
 
-    response.redirect('/api/recover-password/success'); 
+    response.render('recovery/success'); 
   },
 
   showResetForm(request, response) {
@@ -41,31 +41,37 @@ const recoveryController = {
 
   async resetPassword(request, response) {
     const { token } = request.params;
-    const { newPassword } = request.body;
+    const { newPassword, confirmNewPassword } = request.body;
+
+    if (newPassword !== confirmNewPassword) {
+      return response.render('recovery/resetForm', { token, passwordInc: true})
+    }
 
     try {
-      const decodedToken = jwt.verify(token, 'secretKey');
+      const decodedToken = jwt.verify(token, process.env.PRIVATE_KEY);
 
-      // Verificar si el token expiró
-      const tokenExpiration = decodedToken.exp;
-      const currentTime = Math.floor(Date.now() / 1000);
-      if (currentTime > tokenExpiration) {
-        return response.redirect('/recover-password/error');  // Token expiró, redireccionar a la página de error o renderizar la vista...
+      // Verificamos token
+      const expirationTimeInSeconds = decodedToken.exp;
+      const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+      if (currentTimeInSeconds > expirationTimeInSeconds) {
+        return response.render('recovery/failure');  // Token expiró, renderizar la vista...
       }
 
-      // Actualizar la contraseña en la base de datos con la nueva contraseña
+      const user = await userModel.findOne({ email: decodedToken.email});
+      const isPasswordMatch = await bcrypt.compare(newPassword, user.password);
+
+      if (isPasswordMatch) {
+        return response.render('recovery/resetForm', {token, newPasswordMatch:true})
+      }
+
+      // Actualizar la contraseña 
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       await userModel.updateOne({ email: decodedToken.email }, { password: hashedPassword });
-
-      response.redirect('/recover-password/success');  // Redireccionar a la página de éxito o renderizar la vista..
+      response.render('recovery/changeOK');
     } catch (error) {
-      response.redirect('/recover-password/error');  // Si el token no es válido, redireccionar a la página de error o renderizar la vista...
+      response.render('recovery/failure');  // Si el token no es válido, redireccionar a la página de error o renderizar la vista...
     }
   },
-
-  async resetSuccess(request, response) {
-    response.render('recovery/success')
-  },
 };
-
+ 
 export default recoveryController;
