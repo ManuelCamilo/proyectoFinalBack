@@ -19,9 +19,9 @@ class ProductService {
     }
   }
 
-  async addProduct(product) {
+  async addProduct(product, user) {
     try {
-      return await productManager.addProduct(product);
+      return await productManager.addProduct(product, user);
     } catch (error) {
       throw new Error("Error agregando el producto: " + error.message);
     }

@@ -3,3 +3,14 @@
 {"level":"info","message":"Esto es un mensaje de nivel info"}
 {"level":"warning","message":"Esto es un mensaje de nivel warning"}
 {"level":"error","message":"Esto es un mensaje de nivel error"}
+{"level":"error","message":"Error al agregar el producto: Error agregando el producto: CustomError.createError is not a constructor","stack":"Error: Error agregando el producto: CustomError.createError is not a constructor\n    at ProductService.addProduct (file:///C:/Users/Manu/Desktop/ProyectoFinal/src/services/productService.js:26:13)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async pcCreateProduct (file:///C:/Users/Manu/Desktop/ProyectoFinal/src/controllers/productController.js:47:35)"}
+{"level":"error","message":"Error al agregar el producto: Error agregando el producto: CustomError.createError is not a constructor","stack":"Error: Error agregando el producto: CustomError.createError is not a constructor\n    at ProductService.addProduct (file:///C:/Users/Manu/Desktop/ProyectoFinal/src/services/productService.js:26:13)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async pcCreateProduct (file:///C:/Users/Manu/Desktop/ProyectoFinal/src/controllers/productController.js:47:35)"}
+{"level":"error","message":"Error al agregar el producto: Error agregando el producto: CustomError.createError is not a constructor","stack":"Error: Error agregando el producto: CustomError.createError is not a constructor\n    at ProductService.addProduct (file:///C:/Users/Manu/Desktop/ProyectoFinal/src/services/productService.js:26:13)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async pcCreateProduct (file:///C:/Users/Manu/Desktop/ProyectoFinal/src/controllers/productController.js:47:35)"}
+{"level":"error","message":"Error al eliminar el producto"}
+{"level":"error","message":"Error al eliminar el producto"}
+{"level":"error","message":"Error al eliminar el producto"}
+{"level":"error","message":"Error al eliminar el producto"}
+{"level":"error","message":"Error al eliminar el producto"}
+{"level":"error","message":"Error al eliminar el producto"}
+{"level":"error","message":"Error al eliminar el producto"}
+{"level":"error","message":"Error al eliminar el producto"}

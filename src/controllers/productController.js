@@ -44,8 +44,9 @@ const ProductController = {
 
     async pcCreateProduct(request,response) {
         try{
-            const productoNuevo = await productService.addProduct(request.body);
-            response.status(201).json({ message: 'Producto agregado con éxito' })
+            const user = request.session.user;
+            const productoNuevo = await productService.addProduct(request.body, user);
+            response.status(201).json(productoNuevo);
         } catch (error) {
             logger.error('Error al agregar el producto:', error);
             response.status(500).json({ message: 'Error al agregar el producto' })
@@ -61,23 +62,30 @@ const ProductController = {
         }
         response.status(200).json({ message: 'Producto actualizado con éxito'});
         } catch (error) {
-            logger.error('Error al actualizar el producto.', error);
+            logger.error('Error al actualizar el Producto.', error);
             response.status(400).json({message: error.message});
         }
     },
 
     async pcDeleteProduct(request,response) {
         try{
-            const deletedProduct = await productService.deleteProduct(request.params.pid);
-            if (deletedProduct) {
-                response.status(200).json({ message: 'Producto eliminado del catálogo' });
+            const productId = request.params.pid;
+            const user = request.session.user;
+            const existProduct = await productService.getProductById(productId)
+            if(!existProduct) {
+                return response.status(404).json({message:'Producto no encontrado'})
+            }
+
+            if (user.role === 'admin' || (user.role === 'premium' && existProduct.owner === user.email)) {
+                await productService.deleteProduct(productId);
+                response.status(200).json({ message: 'Producto eliminado con éxito' });
             } else {
-                logger.warning('Producto no encontrado')
-                response.status(404).json({ message: 'Producto no encontrado' });
+                response.status(403).json({ message: 'No tienes permiso para realizar esta acción' });
             }
         } catch (error) {
             logger.error('Error al eliminar el producto')
-            return response.status(200).json ({message: 'Producto eliminado del catalogo'})
+            console.log(error)
+            return response.status(500).json ({message: 'Error al eliminar el producto'})
         }
     },
 
