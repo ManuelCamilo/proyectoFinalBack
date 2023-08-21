@@ -43,14 +43,14 @@ router.get("/products", async (request, response) => {
       const { docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } = result;
 
       const user = request.session.user;
-
       response.render('productList', {
         products: docs,
         user: {
           first_name: user.first_name,
           last_name: user.last_name,
           email: user.email,
-          role: user.role
+          role: user.role,
+          cart: user.cart
         },
         totalPages: totalPages,
         prevPage: prevPage,

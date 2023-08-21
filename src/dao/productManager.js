@@ -109,6 +109,7 @@ export default class ProductManager extends ProductRepository {
             });
           }
     }
+    
     async deleteProduct(id) {
         try {
             const deletedproduct = await productModel.findByIdAndDelete(id);

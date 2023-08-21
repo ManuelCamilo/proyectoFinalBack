@@ -4,6 +4,7 @@ import userModel from "../model/user.model.js";
 import GitHubStrategy from 'passport-github2';
 import { createHash, isValidPassword } from "../utils.js";
 import config from "./config.js";
+import cartModel from "../model/carts.model.js"
 
 const LocalStrategy = local.Strategy
 
@@ -20,16 +21,18 @@ const initializePassport = () => {
                 console.log('User already exists!')
                 return done(null, false)
             }
+
+            const cartForNewUser = await cartModel.create({})
             const newUser = {
                 first_name, last_name, age, email,
                 password: createHash(password),
-                cart: null, 
-                role: 'user'
+                cart: cartForNewUser._id, 
+                role
             }
             const result = await userModel.create(newUser)
             return done(null, result)
-        } catch(error) {
-            return done('Error en passport REGISTER ' + error)
+        } catch(err) {
+            return done('Error en passport REGISTER ')
         }
     }))
 
@@ -60,14 +63,22 @@ const initializePassport = () => {
 
         try{
             const user = await userModel.findOne({ email: profile._json.email})
-            if (user) return done (null, user)
+            if (user) {
+                return done (null, user)
+            } 
+            const cartForNewUser = await cartModel.create({})
             const newUser = await userModel.create({
                 first_name: profile._json.name,
-                email:profile._json.email
+                last_name: profile._json.name,
+                age: 0,
+                email: profile._json.email,
+                password: " ",
+                cart: cartForNewUser._id,
+                role: 'premium'
             })
             return done(null, newUser)
         } catch (err) {
-            return done('Error to login with github' + err)
+            return done('Error to login with github')
         }
     }))
 

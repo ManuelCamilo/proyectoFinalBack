@@ -1,16 +1,3 @@
-<script>
-  function addProduct(id) {
-    let cartId = prompt('Ingrese ID del carrito:');
-    fetch(`/api/carts/${cartId}/products/${id}`, {
-      method: "POST"
-    }).then(() => {
-      window.location.href = '/products';
-    }).catch((error) => {
-      console.error('Error al agregar el producto al carrito:', error);
-    });
-  }
-</script>
-
 <h1>Bienvenido/a {{user.first_name}} {{user.last_name}}</h1>
 <p>Correo electrónico: {{user.email}}</p>
 <p>Rol: {{user.role}} </p>
@@ -34,7 +21,7 @@
       <td>{{this.category}}</td>
       <td><a href="/products/{{this._id}}">Ver Detalles</a></td>
       <td>
-        <button onclick="addProduct('{{this._id}}')">Agregar al Carrito</button>
+        <button onclick="addProductToCart('{{this._id}}')">Agregar al Carrito</button>
       </td>
     </tr>
     {{/each}}
@@ -49,3 +36,19 @@
       <a href="{{nextLink}}">Siguiente</a>
     {{/if}}
   </div>
+
+<script>
+  addProductToCart = (pid) => {
+    const userCartId = '{{user.cart}}';
+    fetch(`/api/carts/${userCartId}/products/${pid}`, {
+      method: "post"
+    })
+      .then (result => result.json())
+      .then (result => {
+        if(result.status === 'error') throw new Error(result.error)
+        alert(`Ok. Todo salió bien! :)\nEl producto se agregó al carrito!`)
+    })
+    .catch(err => alert (`Ocurrió un error :(\n${err}`))
+  }
+</script>
+

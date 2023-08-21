@@ -26,12 +26,12 @@ router.post('/login',
     if (!request.user) {
         return response.status(400).send({ status: 'error', error: 'Invalid credentials'})
     }
-    
     request.session.user ={
         first_name: request.user.first_name,
         last_name: request.user.last_name,
         email: request.user.email,
         age: request.user.age,
+        cart: request.user.cart,
         role: request.user.role
     }
 
