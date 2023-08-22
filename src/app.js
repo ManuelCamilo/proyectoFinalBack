@@ -15,6 +15,8 @@ import config from './config/config.js';
 import errorHandler from './services/errors/error.js'
 import loggerController from './controllers/loggerController.js'
 import routerRecovery from './routers/router.recover.js'
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUiExpress from 'swagger-ui-express';
 
 const uri = config.uri
 
@@ -23,6 +25,21 @@ const port = config.port || 8080
 
 const server = app.listen(port, () => console.log(`Server Up on port ${port}`));
 const io = new Server(server) 
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.1',
+    info: {
+      title: 'Documentación proyecto final Coderhouse\nProgramación Backend',
+      description: 'Increíble documentación sobre mi proyecto de programación Backend en Coderhouse'
+    }
+  },
+  apis: ['./docs/**/*.yaml']
+}
+
+const specs = swaggerJSDoc(swaggerOptions)
+app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

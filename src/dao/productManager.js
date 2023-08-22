@@ -81,11 +81,11 @@ export default class ProductManager extends ProductRepository {
             const newProduct = await productModel.create(product);
             return newProduct;
         } catch (error) {
-            console.error("Error agregando el producto:", error);
+            console.error("Error creando el producto:", error);
             throw new CustomError.createError({
-              name: "Error al agregar el producto",
+              name: "Error al crear el producto",
               cause: error,
-              message: "Se produjo un error al intentar agregar el producto.",
+              message: "Se produjo un error al intentar agregar el producto al catalogo.",
               code: EErros.ADD_PRODUCT_ERROR,
             });
         }

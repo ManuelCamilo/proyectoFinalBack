@@ -48,8 +48,8 @@ const ProductController = {
             const productoNuevo = await productService.addProduct(request.body, user);
             response.status(201).json(productoNuevo);
         } catch (error) {
-            logger.error('Error al agregar el producto:', error);
-            response.status(500).json({ message: 'Error al agregar el producto' })
+            logger.error('Error al crear el producto:', error);
+            response.status(500).json({ message: 'Error al crear el producto' })
         }
     },
 

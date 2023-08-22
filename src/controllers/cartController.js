@@ -10,7 +10,7 @@ const cartController = {
         response.status(201).json({ message: 'Carrito creado con éxito!', cart: newCart })
       } catch (error) {
         logger.error('Error al crear el carrito:', error);
-        response.status(500).json({ error: "Internal Server Error" });
+        response.status(500).json({ error: "Error al crear el carrito" });
       }
     },
 

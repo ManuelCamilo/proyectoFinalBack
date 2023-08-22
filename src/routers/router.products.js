@@ -7,7 +7,7 @@ const router = Router();
 
 
 router.get('/', ProductController.pcGetAll);
-router.get('/mockingproducts',authorizeAdmin, ProductController.pcMockProduct);
+router.get('/mockingproducts', ProductController.pcMockProduct);
 router.get('/:pid', ProductController.pcGetByID);
 router.post('/', authorizePremium, ProductController.pcCreateProduct);
 router.put('/:pid', authorizeAdmin, ProductController.pcUpdateProduct);

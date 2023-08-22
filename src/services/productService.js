@@ -23,7 +23,7 @@ class ProductService {
     try {
       return await productManager.addProduct(product, user);
     } catch (error) {
-      throw new Error("Error agregando el producto: " + error.message);
+      throw new Error("Error creando el producto: " + error.message);
     }
   }
 
