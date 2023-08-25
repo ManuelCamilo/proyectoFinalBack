@@ -125,3 +125,5 @@ try {
 } catch (err) {
   console.log('No se pudo conectar a la BD')
 }
+
+export default app

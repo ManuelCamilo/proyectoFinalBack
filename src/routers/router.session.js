@@ -10,6 +10,7 @@ router.get('/register', (request, response) => response.render('sessions/registe
 router.post('/register', 
     passport.authenticate('register', {failureRedirect: '/api/session/failureRegister'}),
     async (request, response) => {
+        console.log('Registration successful. Redirecting to login...')
         response.redirect('/api/session/login')          
 })
 

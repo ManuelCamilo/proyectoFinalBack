@@ -22,17 +22,21 @@ const initializePassport = () => {
                 return done(null, false)
             }
 
+            console.log('Creating a new user...')
+
             const cartForNewUser = await cartModel.create({})
             const newUser = {
                 first_name, last_name, age, email,
                 password: createHash(password),
                 cart: cartForNewUser._id, 
-                role
             }
             const result = await userModel.create(newUser)
+
+            console.log('New user created:', result)
             return done(null, result)
         } catch(err) {
-            return done('Error en passport REGISTER ')
+            console.error('Error in passport REGISTER:', err)
+            return done('Error en passport REGISTER: ' + err.message)
         }
     }))
 

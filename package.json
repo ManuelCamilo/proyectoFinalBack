@@ -32,5 +32,10 @@
   "keywords": [],
   "author": "Manuel Camilo Caro",
   "license": "ISC",
-  "description": "proyecto e-commerce"
+  "description": "proyecto e-commerce",
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "supertest": "^6.3.3"
+  }
 }
