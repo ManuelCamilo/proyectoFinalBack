@@ -16,7 +16,8 @@ import errorHandler from './services/errors/error.js'
 import loggerController from './controllers/loggerController.js'
 import routerRecovery from './routers/router.recover.js'
 import swaggerJSDoc from 'swagger-jsdoc';
-import swaggerUiExpress from 'swagger-ui-express';
+import swaggerUiExpress from 'swagger-ui-express'; 
+import routerUser from './routers/router.user.js';
 
 const uri = config.uri
 
@@ -70,6 +71,7 @@ app.use('/api/products', routerProducts);
 app.use('/api/carts', routerCart);
 app.use('/api/session', sessionRouter);
 app.use('/api/recover-password', routerRecovery);
+app.use('/api/users', routerUser)
 app.get('/loggerTest',loggerController.testLogger);
 app.use(errorHandler)
 // app.use('/realtimeproducts', routerViews);

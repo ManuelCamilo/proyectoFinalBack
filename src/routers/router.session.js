@@ -1,5 +1,5 @@
 import { Router } from "express";
-// import userModel from "../dao/model/user.model";
+import userModel from "../model/user.model.js";
 import passport from "passport";
 import currentDTO from "../dto/sessionDTO.js"; 
 
@@ -27,6 +27,10 @@ router.post('/login',
     if (!request.user) {
         return response.status(400).send({ status: 'error', error: 'Invalid credentials'})
     }
+
+    request.user.last_connection = new Date();
+    await request.user.save();
+
     request.session.user ={
         first_name: request.user.first_name,
         last_name: request.user.last_name,
@@ -43,7 +47,12 @@ router.get('/failLogin', (request, response) => {
     response.send({ error: 'Fail in login'})
 })
 
-router.get('/logout', (request, response) => {
+router.get('/logout', async (request, response) => {
+    if (request.isAuthenticated()) {
+        request.user.last_connection = new Date();
+
+        await request.user.save();
+    }
     request.session.destroy(err => {
         if (err) {
             response.status(500).render('errors/base', {error: err})

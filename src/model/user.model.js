@@ -19,7 +19,17 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'user',
         enum: ['user', 'premium', 'admin']
-    }
+    },
+    status: {
+        type: String,
+        default: 'pendiente',
+        enum: ['pendiente', 'activo'],
+    },
+    documents: [{
+        name: String,
+        reference: String
+    }],
+    last_connection: Date,
 })
 
 
