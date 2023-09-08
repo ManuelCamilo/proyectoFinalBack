@@ -3,6 +3,7 @@ import { dirname } from 'path'
 import bcrypt from 'bcrypt'
 import { fakerES as faker } from '@faker-js/faker'
 import jwt from 'jsonwebtoken'
+import multer from 'multer'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname (__filename)
 
@@ -34,4 +35,21 @@ export const generateToken1h = user => {
     return token1h
 }
 
+
 export default __dirname
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        let destinationFolder = 'public/documents';
+        if (file.fieldname === 'profileImage') {
+        destinationFolder = 'public/profiles';
+    } else if (file.fieldname === 'productImage') {
+        destinationFolder = 'public/products';
+    }
+    cb(null, destinationFolder);
+    },
+    filename: function(req,file,cb) {
+        cb(null, file.originalname)
+    }
+})
+export const uploader = multer({storage})
