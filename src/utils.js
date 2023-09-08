@@ -39,17 +39,19 @@ export const generateToken1h = user => {
 export default __dirname
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        let destinationFolder = 'public/documents';
+    destination: function (_req, file, cb) {
+        let destinationFolder
         if (file.fieldname === 'profileImage') {
-        destinationFolder = 'public/profiles';
-    } else if (file.fieldname === 'productImage') {
-        destinationFolder = 'public/products';
-    }
-    cb(null, destinationFolder);
+            destinationFolder = 'public/profiles';
+        } else if (file.fieldname === 'productImage') {
+            destinationFolder = 'public/products';
+        } else if (file.fieldname === identificacion || file.fieldname === compruebaDocimilio || file.fieldname === compruebaCuenta) {
+            destinationFolder = 'public/documents'
+        }
+        cb(null, destinationFolder);
     },
-    filename: function(req,file,cb) {
+    filename: function(_req,file,cb) {
         cb(null, file.originalname)
     }
 })
-export const uploader = multer({storage})
+export const uploader = multer({storage: storage})

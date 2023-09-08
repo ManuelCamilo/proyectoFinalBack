@@ -20,8 +20,8 @@ class UserService {
       throw new Error('Usuario no encontrado');
       }
 
-      files.forEach((file) => {
-      user.documents.push({ name: file.originalname, reference: file.path });
+      files.forEach((files) => {
+      user.documents.push({ name: files.originalname, reference: files.path });
       });
 
       user.status = 'activo';

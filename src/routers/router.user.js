@@ -7,7 +7,7 @@ const router = Router();
 
 router.get('/premium/:uid', UsersController.formDocs);
 
-router.post('/:uid/documents', uploader.array, UsersController.envDocs);
+router.post('/:uid/documents', uploader.single('file'), UsersController.envDocs);
 
 router.put('/premium/:uid', UsersController.changeRole);
 
