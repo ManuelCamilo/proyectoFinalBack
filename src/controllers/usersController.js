@@ -20,13 +20,9 @@ const UsersController = {
   },
   
   async envDocs(req, res) {
-    console.log(req.params.uid)
-    console.log(req)
     try {
-      if (!req.files || req.files.length === 0) {
-        return res.status(400).send({ status: "error", error: "No se pudo guardar los archivos" });
-      }
-      const user = await usersService.uploadDocuments(req.params.uid, req.files);
+      console.log(req.files)
+      const user = await usersService.uploadDocuments(req.params.uid, req.file);
       res.status(200).json({ message: 'Documentos subidos correctamente', user });
     } catch (error) {
       console.error(error);

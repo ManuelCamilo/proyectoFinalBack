@@ -13,16 +13,16 @@ class UserService {
       }
   }
 
-  async uploadDocuments(uid, files) {
+  async uploadDocuments(uid, file) {
     try {
       const user = await userModel.findOne({ _id: uid });
       if (!user) {
       throw new Error('Usuario no encontrado');
       }
 
-      files.forEach((files) => {
-      user.documents.push({ name: files.originalname, reference: files.path });
-      });
+      // file.forEach((file) => {
+      // user.documents.push({ name: file.originalname, reference: file.path });
+      // });
 
       user.status = 'activo';
 
