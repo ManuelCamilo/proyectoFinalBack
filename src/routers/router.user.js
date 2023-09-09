@@ -1,19 +1,13 @@
 import { Router } from "express";
 import UsersController from "../controllers/usersController.js";
-import { uploadFiles } from "../services/multerMiddleware.js";
+import { upload } from "../services/multerMiddleware.js";
 
 
 const router = Router();
 
 router.get('/premium/:uid', UsersController.formDocs);
 
-router.post('/:uid/documents',
-uploadFiles('profileImage'),
-uploadFiles('productImage'),
-uploadFiles('identificacion'),
-uploadFiles('domicilio'),
-uploadFiles('compruebaCuenta'),
-UsersController.envDocs);
+router.post('/:uid/documents', upload.fields([{name:'profileImage'}, {name:'productImage'}, {name:'identificacion'}, {name:'domicilio'}, {name:'compruebaCuenta'}]), UsersController.envDocs);
 
 router.put('/premium/:uid', UsersController.changeRole);
 

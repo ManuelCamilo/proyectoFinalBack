@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
             destinationFolder = './src/public/documents'
         }
 
-        cb(null, './src/public');
+        cb(null, destinationFolder);
     },
     filename: (_req ,file ,cb) => {
         cb(null, file.originalname)
@@ -20,16 +20,5 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage})
 
 
-function uploadFiles(fieldname) {
-    return function (req, res, next) {
-        upload.array(fieldname)(req,res, (err) => {
-            if (err) {
-                console.error(`Error al cargar el archivo ${fieldname}: ${err.message}`)
-                return res.status(400).json({error: `Error al cargar los archivos ${fieldname}`})
-            }
-            next ();
-        });
-    };
-}
 
-export {uploadFiles}
+export {upload}
