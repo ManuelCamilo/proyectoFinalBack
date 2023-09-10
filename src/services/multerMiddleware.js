@@ -14,7 +14,10 @@ const storage = multer.diskStorage({
         cb(null, destinationFolder);
     },
     filename: (_req ,file ,cb) => {
-        cb(null, file.originalname)
+        const fieldName = file.fieldname;
+        const originalName = file.originalname;
+        const newName = `${fieldName}_${originalName}`
+        cb(null, newName)
     }
 })
 const upload = multer({storage: storage})

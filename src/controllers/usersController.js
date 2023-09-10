@@ -21,8 +21,7 @@ const UsersController = {
   
   async envDocs(req, res) {
     try {
-      console.log(req.files)
-      const user = await usersService.uploadDocuments(req.params.uid, req.file);
+      const user = await usersService.uploadDocuments(req.params.uid, req.files);
       res.status(200).json({ message: 'Documentos subidos correctamente', user });
     } catch (error) {
       console.error(error);

@@ -16,14 +16,19 @@ class UserService {
   async uploadDocuments(uid, files) {
     try {
       const user = await userModel.findOne({ _id: uid });
-      console.log(user._id)
       if (!user) {
       throw new Error('Usuario no encontrado');
       }
 
-      files.forEach((file) => {
-      user.documents.push({ name: file.originalname, reference: file.path });
-      });
+      for (const fieldName in files) {
+        if (Object.prototype.hasOwnProperty.call(files, fieldName)) {
+          const fileArray = files[fieldName]
+
+          fileArray.forEach((file) => {
+            user.documents.push({ name: file.originalname, reference: file.path});
+          });
+        }
+      }
 
       user.status = 'activo';
 
@@ -41,18 +46,30 @@ class UserService {
         throw new Error('Usuario no encontrado');
       }
 
+      const isPremium = user.role === 'premium';
+      if (isPremium) {
+        user.role = 'user';
+      } else {
+        const requiredFields = ['identificacion', 'domicilio', 'compruebaCuenta'];
+  
+        const hasRequiredFields = requiredFields.every((fieldName) => {
+          const fieldDocuments = user.documents.filter((document) =>
+            document.reference.toLowerCase().includes(fieldName.toLowerCase())
+          );
+          return fieldDocuments.length > 0;
+        });
+  
+        if (!hasRequiredFields) {
+        throw new Error('Falta cargar documentos requeridos');
+        }
 
-      const requiredDocuments = ['Identificación', 'Comprobante de domicilio', 'Comprobante de estado de cuenta'];
+        user.role = 'premium';
 
-      const hasRequiredDocuments = requiredDocuments.every((doc) =>
-        user.documents.some((document) => document.name === doc)
-      );
-
-      if (!hasRequiredDocuments) {
-      throw new Error('Falta cargar documentos requeridos');
       }
 
-      user.role = 'premium';
+
+      
+
 
       await user.save();
       return user;
