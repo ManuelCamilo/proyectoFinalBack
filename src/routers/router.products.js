@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import ProductController from '../controllers/productController.js';
 import { authorizePremiumAdmin, authorizeAdmin } from '../services/authMiddleware.js';
-// import isAdmin from '../services/role.js';
+
 
 const router = Router();
 
