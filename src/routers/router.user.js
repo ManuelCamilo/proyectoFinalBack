@@ -11,4 +11,8 @@ router.post('/:uid/documents', upload.fields([{name:'profileImage'}, {name:'prod
 
 router.put('/premium/:uid', UsersController.changeRole);
 
+router.get('/', UsersController.usersList );
+
+router.delete('/', UsersController.deleteIna)
+
 export default router

@@ -21,4 +21,4 @@ const sharedMailgenConfig = {
 
 const mailGenerator = new mailgen(sharedMailgenConfig);
 
-export default {transporter,  mailGenerator,};
+export default { transporter, mailGenerator };
