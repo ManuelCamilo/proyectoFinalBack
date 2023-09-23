@@ -48,6 +48,7 @@ const recoveryController = {
     }
 
     try {
+      //verificación y decodificación del token
       const decodedToken = jwt.verify(token, process.env.PRIVATE_KEY);
 
       // Verificamos token

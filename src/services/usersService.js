@@ -66,11 +66,7 @@ class UserService {
         user.role = 'premium';
 
       }
-
-
       
-
-
       await user.save();
       return user;
     } catch (error) {

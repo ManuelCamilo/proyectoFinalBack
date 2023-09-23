@@ -47,7 +47,7 @@ const UsersController = {
   async usersList(req, res) {
     try {
       const users = await userModel.find({}, 'first_name last_name email role').lean().exec();
-      res.status(200).json(users);
+      res.render('usersList', {users});
     } catch (error) {
       console.error('Error al obtener usuarios:', error);
       res.status(500).json({error: 'Error interno del servidor'});
@@ -56,23 +56,19 @@ const UsersController = {
 
   async deleteIna(req, res) {
     try {
-      console.log('Iniciando la función deleteIna...');
       const currentDate = new Date();
-      const inactivityPeriod = 1 * 60 * 1000;
+      const inactivityPeriod = 2 * 24 * 60 * 60 * 1000;
 
       const inactivityLimit = new Date(currentDate - inactivityPeriod);
 
       const inactiveUsers = await userModel.find({
         last_connection: { $lt: inactivityLimit },
       }).lean();
-  
-      console.log(`Usuarios inactivos a eliminar: ${inactiveUsers.length}`);
+
 
       const deletionResult = await userModel.deleteMany({
       last_connection: { $lt: inactivityLimit },
       });
-
-      console.log(`Usuarios eliminados: ${deletionResult.deletedCount}`);
 
       for (const user of inactiveUsers) {
         console.log(`Enviando correo electrónico a ${user.email}...`);
@@ -93,15 +89,41 @@ const UsersController = {
           html: emailHTML,
         };
         await emailConfig.transporter.sendMail(mailOptions);
-        console.log(`Correo electrónico enviado a ${user.email}`);
       }
-      console.log('Función deleteIna completada con éxito.');
       res.status(200).json({ message: 'Usuarios inactivos eliminados correctamente' });
     } catch (error) {
       console.error('Error al eliminar usuarios inactivos:', error);
       res.status(500).json({ error: 'Error interno del servidor' });
     }
-  }
+  },
+
+  async manualChangeRole(req, res) {
+    try {
+      const { userId } = req.params;
+      const { newRole } = req.body
+
+      // Actualiza el rol del usuario
+      await userModel.findByIdAndUpdate(userId, { role: newRole });
+
+      res.json({ success: true, message: 'Rol cambiado con éxito' });
+    } catch (error) {
+      console.error('Error al cambiar el rol:', error);
+      res.json({ success: false, message: 'Error al cambiar el rol' });
+    }  
+  },
+
+  async manualDeleteUser(req, res) {
+    try {
+      const {userId} = req.params;
+
+      await userModel.findByIdAndDelete(userId);
+      res.json({ success: true, message: "Usuario eliminado con éxito"});
+    } catch(error) {
+      console.error('Error al eliminar el usuario:', error);
+      res.json({ success: false, message: 'Error al eliminar el usuario'})
+    }
+  },
+
 };
 
 

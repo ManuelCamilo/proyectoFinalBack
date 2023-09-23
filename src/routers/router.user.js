@@ -1,6 +1,7 @@
 import { Router } from "express";
 import UsersController from "../controllers/usersController.js";
 import { upload } from "../services/multerMiddleware.js";
+import { authorizeAdmin } from "../services/authMiddleware.js"
 
 
 const router = Router();
@@ -11,8 +12,12 @@ router.post('/:uid/documents', upload.fields([{name:'profileImage'}, {name:'prod
 
 router.put('/premium/:uid', UsersController.changeRole);
 
-router.get('/', UsersController.usersList );
+router.get('/', authorizeAdmin, UsersController.usersList );
 
 router.delete('/', UsersController.deleteIna)
+
+router.post('/manualChangeRole/:userId', authorizeAdmin, UsersController.manualChangeRole);
+
+router.delete('/manualDeleteUser/:userId', authorizeAdmin, UsersController.manualDeleteUser)
 
 export default router
