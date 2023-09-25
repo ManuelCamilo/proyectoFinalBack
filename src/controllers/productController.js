@@ -1,6 +1,9 @@
 import ProductService from "../services/productService.js";
 import { generateProduct } from "../utils.js";
 import logger from "../services/logger.js";
+import dotenv from 'dotenv'
+import emailConfig from "../config/emailConfig.js";
+dotenv.config()
 
 
 const productService = new ProductService();
@@ -77,8 +80,21 @@ const ProductController = {
             }
 
             if (user.role === 'admin' || (user.role === 'premium' && existProduct.owner === user.email)) {
-                await productService.deleteProduct(productId);
-                response.status(200).json({ message: 'Producto eliminado con éxito' });
+                const deleted = await productService.deleteProduct(productId, user);
+
+                if (deleted && user.role === 'premium' && existProduct.owner === user.email) {
+                    const mailOptions = {
+                        from: process.env.GMAIL_USER,
+                        to: user.email,
+                        subject: 'Tu producto ha sido eliminado.',
+                        html: `Tu producto se ha eliminado del catálogo, si tienes alguna duda no dudes en contactarte.`,
+                    };
+                    
+                    await emailConfig.transporter.sendMail(mailOptions);
+                    console.log("correo enviado")
+                    
+                } 
+                response.status(200).json({ message: 'Producto eliminado con éxito'})
             } else {
                 response.status(403).json({ message: 'No tienes permiso para realizar esta acción' });
             }

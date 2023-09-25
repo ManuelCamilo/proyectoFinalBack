@@ -1,72 +1,70 @@
-const btnCrear = document.querySelector("#btnCrear");
-const title = document.querySelector("#title");
-const description = document.querySelector("#description");
-const price = document.querySelector("#price");
-const thumbnail = document.querySelector("#thumbnail");
-const code = document.querySelector("#code");
-const stock = document.querySelector("#stock");
+const socketClient = io();
 
-const btnDelete = document.querySelector("#btnDelete");
-const id = document.querySelector("#id");
-
-const historyProducts = document.querySelector("#historyProducts");
-
-const socket = io();
-
-btnCrear.addEventListener("click", () => {
-  let product = {
-    title: title.value,
-    description: description.value,
-    price: price.value,
-    thumbnail: thumbnail.value,
-    code: code.value,
-    stock: stock.value,
-  };
-  socket.emit("new-product", product);
+// Asigno
+const addform = document.querySelector("#addproduct");
+addform.addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    // emito un evento para agragar el producto
+    const formData = new FormData(addform);
+    const productData = {
+        title: formData.get("title"),
+        description: formData.get("description"),
+        price: parseFloat(formData.get("price")),
+        category: formData.get("category"),
+        thumbnails: formData.get("thumbnails"),
+        status: formData.get("status"),
+        code: formData.get("code"),
+        stock: parseInt(formData.get("stock")),
+    }
+    console.log('Evento "submit" del formulario de agregar producto con datos:', productData); // Agregado para verificar los datos enviados
+    socketClient.emit("addProd", productData);
+});
+// busco busco todos los botones para borrar el producto
+document.addEventListener("click", (ev) => {
+    if (ev.target.classList.contains("deleteproduct")) {
+        ev.preventDefault();
+        const prodid = ev.target.getAttribute("prodid");
+        console.log('Botón "Borrar producto" con ID:', prodid);
+        socketClient.emit("deleteProd", prodid);
+    }
 });
 
-btnDelete.addEventListener("click", () => {
-  socket.emit("delete-product", id.value);
-});
-
-socket.on("resp-new-product", (data) => {
-  if (typeof data == "string") {
-    alert(data);
-    return;
-  } else {
-    historyProducts.innerHTML = "";
-    data.reverse().forEach((product) => {
-      historyProducts.innerHTML += `
-            <div>
-                <h3>${product.title}</h3>
-                <p>${product.description}</p>
-                <p>${product.price}</p>
-                <p>${product.thumbnail}</p>
-                <p>${product.code}</p>
-                <p>${product.stock}</p>
+socketClient.on("products", (productos) => {
+    let innerHtml = "";
+    // creo el html para reemplazar los productos en realTimeProducts
+    productos.forEach((producto) => {
+        innerHtml += `
+        <div id="product${producto.id}">
+        <h3>${producto.title}</h3>
+            <p>${producto.description}</p>
+            <p>Precio: $${producto.price}</p>
+            <p>Categoría: ${producto.category}</p>
+            <p>Imagen: ${producto.thumbnails}</p>
+            <p>Status: ${producto.status}</p>
+            <p>Código: ${producto.code}</p>
+            <p>Stock: ${producto.stock}</p>
+            <input
+                type="button"
+                class="deleteproduct"
+                prodid="${producto.id}"
+                value="Borrar este producto"
+            />
             </div>
             `;
     });
-  }
+    console.log('Productos recibidos:', productos);
+    document.querySelector("#realtimeproducts").innerHTML = innerHtml;    
 });
 
-socket.on("resp-delete-product", (data) => {
-  if (typeof data == "string") {
-    alert(data);
-    return;
-  } else {
-    historyProducts.innerHTML = "";
-    data.reverse().forEach((product) => {
-      historyProducts.innerHTML += `
-            <div>
-                <h3>${product.title}</h3>
-                <p>${product.description}</p>
-                <p>${product.price}</p>
-                <p>${product.thumbnail}</p>
-                <p>${product.code}</p>
-                <p>${product.stock}</p>
-            </div>
-            `;
+socketClient.on("error", (errores) => {
+    console.log('Evento "error" recibido con errores:', errores);
+    let errorestxt = "ERROR\r";
+    errores.errortxt.forEach((error) => {
+        errorestxt += error + "\r";
     });
-  }
+    alert(errorestxt);
+});
+socketClient.on("result", (resultado) => {
+    console.log('Evento "result" recibido con resultado:', resultado);
+    alert(resultado);
 });

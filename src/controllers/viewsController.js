@@ -8,7 +8,13 @@ const viewsController = {
     },
 
     async renderRealTimeProducts(request, response) {
-        response.render("realTimeProducts", {});
+        try {
+            const products = await productModel.find();
+            const productsWithoutPrototype = JSON.parse(JSON.stringify(products));
+            response.render("realTimeProducts", { products: productsWithoutPrototype });    
+        } catch (err) {
+            response.status(500).send(err);
+        }
     },
 
     async renderProductList(request, response) {

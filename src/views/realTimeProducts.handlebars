@@ -1,31 +1,37 @@
-<div id="formContainer">
-  <h2>Cargar un producto</h2>
-  <div>Titulo:</div>
-  <div><input type="text" id="title" /></div>
-  <div>Description:</div>
-  <div><input type="text" id="description" /></div>
-  <div>Precio:</div>
-  <div><input type="text" id="price" /></div>
-  <div>Imagen:</div>
-  <div><input type="text" id="thumbnail" /></div>
-  <div>Codigo:</div>
-  <div><input type="text" id="code" /></div>
-  <div>Stock:</div>
-  <div><input type="text" id="stock" /></div>
-  <button id="btnCrear">Crear</button>
-</div>
-<div>
-  <h2>Eliminar producto</h2>
-  <div>Id:</div>
-  <div><input type="text" id="id"></div>
-  <button id="btnDelete">Eliminar</button>
-</div>
-<div id="productsContainer">
-  <h2>Listado de productos</h2>
-  
-</div>
+<h2>Productos en tiempo real</h2>
 
-<div id="historyProducts"></div>
+<form id="addproduct">
+    <h4>Agregar producto</h4>
+    <input type="text" name="title" placeholder="Título" required>
+    <input type="text" name="description" placeholder="Descripción" required>
+    <input type="number" name="price" placeholder="Precio" required>
+    <input type="text" name="category" placeholder="Categoria" required>
+    <input type="text" name="thumbnails" placeholder="URL de la imagen" required>
+    <input type="text" name="status" placeholder="Estado" required> 
+    <input type="text" name="code" placeholder="Código" required>
+    <input type="number" name="stock" placeholder="Stock" required>
+    <button type="submit">Agregar Producto</button>
+</form>
 
+<div id="realtimeproducts">
+    {{#each products}}
+        <div id="product{{this._id}}">
+            <h3>{{this.title}}</h3>
+            <p>{{this.description}}</p>
+            <p>Precio: ${{this.price}}</p>
+            <p>Categoría: {{this.category}}</p>
+            <p>Imagen: {{this.thumbnails}}</p>
+            <p>Status: {{this.status}}</p>
+            <p>Código: {{this.code}}</p>
+            <p>Stock: {{this.stock}}</p>
+            <input
+                type="button"
+                class="deleteproduct"
+                prodid="{{this._id}}"
+                value="Borrar este producto"
+            />
+        </div>
+    {{/each}}
+</div>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/clientIndex.js"></script>

@@ -73,10 +73,10 @@ export default class ProductManager extends ProductRepository {
 
     async addProduct(product, user) {
         try{
-            if (!product.owner) {
-                product.owner = 'admin'
-            } else {
+            if (user.role === "premium") {
                 product.owner = user.email;
+            } else {
+                product.owner = "admin";
             }
             const newProduct = await productModel.create(product);
             return newProduct;
