@@ -74,7 +74,6 @@ const viewsController = {
         const cid = request.params.cid
         try{
             const cart = await cartModel.findOne({ _id:cid}).lean();
-
             response.render("cart", {cart});
         } catch (error) {
             console.error("No se puede obtener el carrito: ", error);

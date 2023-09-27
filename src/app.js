@@ -82,31 +82,24 @@ io.on("connection", (socket) => {
   socket.on('deleteProd', async (prodId) => {
     console.log('Evento "deleteProd" recibido con ID: ', prodId);
     try {
-      // Realiza la lógica para eliminar el producto con el ID "prodId"
       const deletedProduct = await productModel.findByIdAndDelete(prodId);
-      console.log('Producto eliminado:', deletedProduct); // Agregado para verificar si se eliminó el producto    
+      console.log('Producto eliminado:', deletedProduct);
       if (!deletedProduct) {
-        // Si el producto no se encontró, emite un evento de error
         socket.emit('error', { error: 'El producto no se pudo encontrar o eliminar.' });
       } else {
-        // Si el producto se eliminó correctamente, emite un evento "products" a todos los clientes
         const updatedProducts = await productModel.find();
         io.emit('products', updatedProducts);
-        // Emite un evento de resultado exitoso
         socket.emit('result', 'Producto eliminado exitosamente.');
       }
     } catch (error) {
-      // Manejo de errores
       console.error('Error al eliminar el producto:', error);
       socket.emit('error', { error: 'Ocurrió un error al eliminar el producto.' });
     }
   });
   
-  // Manejo de eventos "addProd"
   socket.on('addProd', async (product) => {
     console.log('Evento "addProd" recibido con datos: ', product);
     try {
-      // Realiza la lógica para agregar un nuevo producto utilizando los datos proporcionados en "product"
       const newProduct = new productModel({
         title: product.title,
         description: product.description,
@@ -117,22 +110,22 @@ io.on("connection", (socket) => {
         code: product.code,
         stock: product.stock
       });
-       // Asegúrate de que los datos coincidan con tu modelo
+       
       console.log('Nuevo producto a agregar:', newProduct);
       const savedProduct = await newProduct.save();
       console.log('Producto guardado:', savedProduct);
       if (!savedProduct) {
-        // Si no se pudo guardar el producto, emite un evento de error
+       
         socket.emit('error', { error: 'El producto no se pudo agregar.' });
       } else {
-        // Si el producto se agregó correctamente, emite un evento "products" a todos los clientes
+       
         const updatedProducts = await productModel.find();
         io.emit('products', updatedProducts);
-        // Emite un evento de resultado exitoso
+       
         socket.emit('result', 'Producto agregado exitosamente.');
       }
     } catch (error) {
-      // Manejo de errores
+      
       console.error('Error al agregar el producto:', error);
       socket.emit('error', { error: 'Ocurrió un error al agregar el producto.' });
     }
