@@ -1,10 +1,10 @@
 const socketClient = io();
 
-// Asigno
+
 const addform = document.querySelector("#addproduct");
 addform.addEventListener("submit", (ev) => {
     ev.preventDefault();
-    // emito un evento para agragar el producto
+
     const formData = new FormData(addform);
     const productData = {
         title: formData.get("title"),
@@ -16,10 +16,10 @@ addform.addEventListener("submit", (ev) => {
         code: formData.get("code"),
         stock: parseInt(formData.get("stock")),
     }
-    console.log('Evento "submit" del formulario de agregar producto con datos:', productData); // Agregado para verificar los datos enviados
+    console.log('Evento "submit" del formulario de agregar producto con datos:', productData); 
     socketClient.emit("addProd", productData);
 });
-// busco busco todos los botones para borrar el producto
+
 document.addEventListener("click", (ev) => {
     if (ev.target.classList.contains("deleteproduct")) {
         ev.preventDefault();
@@ -31,7 +31,7 @@ document.addEventListener("click", (ev) => {
 
 socketClient.on("products", (productos) => {
     let innerHtml = "";
-    // creo el html para reemplazar los productos en realTimeProducts
+
     productos.forEach((producto) => {
         innerHtml += `
         <div id="product${producto.id}">

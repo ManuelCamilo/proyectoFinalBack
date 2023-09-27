@@ -1,16 +1,14 @@
 <script>
 function removeProduct(productId) {
-  const cartId = "{{cart._id}}"; // Obtén el cartId desde tu vista Handlebars
+  const cartId = "{{cart._id}}";
 
   fetch(`/api/carts/${cartId}/products/${productId}`, {
     method: "DELETE"
   })
     .then((response) => {
       if (response.ok) {
-        // La eliminación fue exitosa, redirige a la página del carrito actualizada
         window.location.href = `/carts/${cartId}`;
       } else {
-        // Muestra un mensaje de error si la eliminación falla
         console.error('Error al eliminar el producto del carrito:', response.status);
       }
     })
