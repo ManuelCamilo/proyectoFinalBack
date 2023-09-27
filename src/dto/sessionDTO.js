@@ -6,8 +6,3 @@ export default class currentDTO {
     }
 }
 
-// first_name: request.user.first_name,
-// last_name: request.user.last_name,
-// email: request.user.email,
-// age: request.user.age,
-// role: request.user.role

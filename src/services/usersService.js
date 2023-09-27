@@ -1,39 +1,21 @@
-import userModel from "../model/user.model.js";
+import UserManager from "../dao/usersManager.js";
 
 class UserService {
+  constructor() {
+    this.userManager = new UserManager();
+  }
+
   async getUserById(uid) {
     try {
-      const user = await userModel.findOne({ _id: uid });
-      if (!user) {
-        throw new Error('Usuario no encontrado');
-      }
-        return user;
-      } catch (error) {
-        throw error;
-      }
+      return await this.userManager.getUserById(uid);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async uploadDocuments(uid, files) {
     try {
-      const user = await userModel.findOne({ _id: uid });
-      if (!user) {
-      throw new Error('Usuario no encontrado');
-      }
-
-      for (const fieldName in files) {
-        if (Object.prototype.hasOwnProperty.call(files, fieldName)) {
-          const fileArray = files[fieldName]
-
-          fileArray.forEach((file) => {
-            user.documents.push({ name: file.originalname, reference: file.path});
-          });
-        }
-      }
-
-      user.status = 'activo';
-
-      await user.save();
-      return user;
+      return await this.userManager.uploadDocuments(uid, files);
     } catch (error) {
       throw error;
     }
@@ -41,34 +23,39 @@ class UserService {
 
   async changeUserRole(uid) {
     try {
-      const user = await userModel.findOne({ _id: uid });
-      if (!user) {
-        throw new Error('Usuario no encontrado');
-      }
+      return await this.userManager.changeUserRole(uid);
+    } catch (error) {
+      throw error;
+    }
+  }
 
-      const isPremium = user.role === 'premium';
-      if (isPremium) {
-        user.role = 'user';
-      } else {
-        const requiredFields = ['identificacion', 'domicilio', 'compruebaCuenta'];
-  
-        const hasRequiredFields = requiredFields.every((fieldName) => {
-          const fieldDocuments = user.documents.filter((document) =>
-            document.reference.toLowerCase().includes(fieldName.toLowerCase())
-          );
-          return fieldDocuments.length > 0;
-        });
-  
-        if (!hasRequiredFields) {
-        throw new Error('Falta cargar documentos requeridos');
-        }
+  async getUsersList() {
+    try {
+      return await this.userManager.getUsersList();
+    } catch (error) {
+      throw error;
+    }
+  }
 
-        user.role = 'premium';
+  async deleteInactiveUsers() {
+    try {
+      return await this.userManager.deleteInactiveUsers();
+    } catch (error) {
+      throw error;
+    }
+  }
 
-      }
-      
-      await user.save();
-      return user;
+  async manualChangeRole(userId, newRole) {
+    try {
+      return await this.userManager.manualChangeRole(userId, newRole);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async manualDeleteUser(userId) {
+    try {
+      return await this.userManager.manualDeleteUser(userId);
     } catch (error) {
       throw error;
     }

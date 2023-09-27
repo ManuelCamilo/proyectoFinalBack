@@ -17,6 +17,29 @@ function removeProduct(productId) {
     });
 }
 
+function purchaseCart(cartId) {
+  fetch(`/api/carts/${cartId}/purchase`, {
+    method: "POST"
+  })
+    .then((response) => {
+      if (response.ok) {
+        alert("La compra se realizó con éxito. Te llegará al correo la factura de la compra.");
+        window.location.href = "/products"
+        return response.json();
+      } else {
+        console.error('Error al realizar la compra:', response.status);
+      }
+    })
+    .then((data) => {
+      if (data && data.message) {
+        console.log(data.message);
+      }
+    })
+    .catch((error) => {
+      console.error('Error al realizar la compra:', error);
+    });
+}
+
 </script>
 <h1>Carrito de Compras</h1>
   <h2>Cart ID: {{cart._id}}</h2>
@@ -38,5 +61,6 @@ function removeProduct(productId) {
     </div>
   {{/each}}
   <p>PAGAR</p>
+  <button onclick="purchaseCart('{{cart._id}}')">Comprar</button>
 
 
